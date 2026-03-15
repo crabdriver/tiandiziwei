@@ -19,7 +19,7 @@ struct TrueSolarTime {
     static func calculate(year: Int, month: Int, day: Int,
                           hour: Int, minute: Int,
                           longitude: Double,
-                          standardMeridian: Double = 120.0) -> (hour: Int, minute: Int) {
+                          standardMeridian: Double = 120.0) -> (hour: Int, minute: Int, dayOffset: Int) {
         // 1. 经度时差修正（每度4分钟）
         let longitudeCorrection = (longitude - standardMeridian) * 4.0 // 分钟
         
@@ -30,11 +30,19 @@ struct TrueSolarTime {
         let totalMinutes = Double(hour * 60 + minute) + longitudeCorrection + eot
         
         var correctedMinutes = Int(round(totalMinutes))
-        // 处理溢出
-        if correctedMinutes < 0 { correctedMinutes += 1440 }
-        if correctedMinutes >= 1440 { correctedMinutes -= 1440 }
+        var dayOffset = 0
+
+        while correctedMinutes < 0 {
+            correctedMinutes += 1440
+            dayOffset -= 1
+        }
+
+        while correctedMinutes >= 1440 {
+            correctedMinutes -= 1440
+            dayOffset += 1
+        }
         
-        return (hour: correctedMinutes / 60, minute: correctedMinutes % 60)
+        return (hour: correctedMinutes / 60, minute: correctedMinutes % 60, dayOffset: dayOffset)
     }
     
     /// 均时差（Equation of Time）
@@ -64,17 +72,90 @@ struct TrueSolarTime {
                         longitude: Double) -> TrueSolarTimeResult {
         let longitudeCorrection = (longitude - 120.0) * 4.0
         let eot = equationOfTime(year: year, month: month, day: day)
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = day
+
         let result = calculate(year: year, month: month, day: day,
                              hour: hour, minute: minute, longitude: longitude)
+
+        let adjustedDate = calendar.date(from: components).flatMap {
+            calendar.date(byAdding: .day, value: result.dayOffset, to: $0)
+        }
+        let adjustedComponents = adjustedDate.map {
+            calendar.dateComponents([.year, .month, .day], from: $0)
+        }
         
         return TrueSolarTimeResult(
             originalHour: hour,
             originalMinute: minute,
             trueSolarHour: result.hour,
             trueSolarMinute: result.minute,
+            trueSolarYear: adjustedComponents?.year ?? year,
+            trueSolarMonth: adjustedComponents?.month ?? month,
+            trueSolarDay: adjustedComponents?.day ?? day,
+            dayOffset: result.dayOffset,
             longitudeCorrection: longitudeCorrection,
             equationOfTime: eot,
-            totalCorrection: longitudeCorrection + eot
+            totalCorrection: longitudeCorrection + eot,
+            originalYear: year,
+            originalMonth: month,
+            originalDay: day
+        )
+    }
+
+    /// 将真太阳时反推为钟表时间
+    static func convertFromTrueSolar(year: Int, month: Int, day: Int,
+                                     hour: Int, minute: Int,
+                                     longitude: Double) -> TrueSolarTimeResult {
+        let longitudeCorrection = (longitude - 120.0) * 4.0
+        let eot = equationOfTime(year: year, month: month, day: day)
+        let correction = longitudeCorrection + eot
+
+        let totalMinutes = Double(hour * 60 + minute) - correction
+        var correctedMinutes = Int(round(totalMinutes))
+        var dayOffset = 0
+
+        while correctedMinutes < 0 {
+            correctedMinutes += 1440
+            dayOffset -= 1
+        }
+
+        while correctedMinutes >= 1440 {
+            correctedMinutes -= 1440
+            dayOffset += 1
+        }
+
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = day
+
+        let adjustedDate = calendar.date(from: components).flatMap {
+            calendar.date(byAdding: .day, value: dayOffset, to: $0)
+        }
+        let adjustedComponents = adjustedDate.map {
+            calendar.dateComponents([.year, .month, .day], from: $0)
+        }
+
+        return TrueSolarTimeResult(
+            originalHour: correctedMinutes / 60,
+            originalMinute: correctedMinutes % 60,
+            trueSolarHour: hour,
+            trueSolarMinute: minute,
+            trueSolarYear: year,
+            trueSolarMonth: month,
+            trueSolarDay: day,
+            dayOffset: dayOffset,
+            longitudeCorrection: longitudeCorrection,
+            equationOfTime: eot,
+            totalCorrection: correction,
+            originalYear: adjustedComponents?.year ?? year,
+            originalMonth: adjustedComponents?.month ?? month,
+            originalDay: adjustedComponents?.day ?? day
         )
     }
 }
@@ -85,16 +166,45 @@ struct TrueSolarTimeResult {
     let originalMinute: Int
     let trueSolarHour: Int
     let trueSolarMinute: Int
+    let trueSolarYear: Int
+    let trueSolarMonth: Int
+    let trueSolarDay: Int
+    let dayOffset: Int
     let longitudeCorrection: Double  // 经度修正（分钟）
     let equationOfTime: Double       // 均时差（分钟）
     let totalCorrection: Double      // 总修正（分钟）
+    let originalYear: Int
+    let originalMonth: Int
+    let originalDay: Int
     
     var formattedOriginal: String {
         String(format: "%02d:%02d", originalHour, originalMinute)
     }
+
+    var formattedOriginalDateTime: String {
+        String(
+            format: "%d-%d-%d %02d:%02d",
+            originalYear,
+            originalMonth,
+            originalDay,
+            originalHour,
+            originalMinute
+        )
+    }
     
     var formattedTrueSolar: String {
         String(format: "%02d:%02d", trueSolarHour, trueSolarMinute)
+    }
+
+    var formattedTrueSolarDateTime: String {
+        String(
+            format: "%d-%d-%d %02d:%02d",
+            trueSolarYear,
+            trueSolarMonth,
+            trueSolarDay,
+            trueSolarHour,
+            trueSolarMinute
+        )
     }
     
     var correctionDescription: String {

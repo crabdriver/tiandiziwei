@@ -68,6 +68,37 @@ struct ChartDisplayView: View {
                     infoRow("五行局", chart.wuXingJu)
                     infoRow("命主", chart.mingZhu)
                     infoRow("身主", chart.shenZhu)
+                    infoRow("来因宫", chart.laiYinGong)
+                    infoRow("流斗", chart.liuDou)
+                    infoRow("当前流年", chart.flowYearGanZhi)
+                    infoRow("当前虚岁", "\(chart.nominalAge)")
+                    infoRow("时间模式", chart.timeInputMode.title)
+                    infoRow(
+                        "阴历日期",
+                        "\(chart.lunarDate.year)年\(chart.lunarDate.isLeapMonth ? "闰" : "")\(chart.lunarDate.month)月\(chart.lunarDate.day)日"
+                    )
+                    infoRow("农历月计数", "\(chart.lunarMonthCount)")
+                    infoRow("钟表时间", chart.clockTime)
+                    infoRow("真太阳时", chart.trueSolarTime)
+                    infoRow("换月", chart.useMonthAdjustment ? "已启用" : "未启用")
+                }
+            }
+
+            GroupBox("APK 对照") {
+                VStack(alignment: .leading, spacing: 8) {
+                    infoRow("F 值", viewModel.input.timeInputMode.apkCode)
+                    infoRow("性别码", viewModel.input.apkGenderCode)
+                    infoRow("经度", viewModel.input.apkLongitudeString)
+                    infoRow("Payload", viewModel.input.apkPayloadString)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("完整参数串")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text(viewModel.input.apkFullString())
+                            .font(.system(.caption, design: .monospaced))
+                            .textSelection(.enabled)
+                    }
                 }
             }
             
@@ -111,6 +142,27 @@ struct ChartDisplayView: View {
                             }
                         }
                         
+                        VStack(alignment: .leading, spacing: 4) {
+                            infoRow("长生", palace.changSheng)
+                            infoRow("岁前", palace.suiQian)
+                            infoRow("将前", palace.jiangQian)
+                            infoRow("博士", palace.boshi)
+                            infoRow("小限", palace.xiaoXian.isEmpty ? "-" : palace.xiaoXian)
+                        }
+                        .font(.caption)
+
+                        if !palace.gongTransforms.isEmpty {
+                            transformSection(title: "宫干四化", transforms: palace.gongTransforms)
+                        }
+
+                        if !palace.chongHua.isEmpty {
+                            transformSection(title: "冲化", transforms: palace.chongHua)
+                        }
+
+                        if !palace.ziHua.isEmpty {
+                            transformSection(title: "自化", transforms: palace.ziHua)
+                        }
+
                         // 星曜
                         FlowLayout(spacing: 6) {
                             ForEach(palace.stars, id: \.name) { star in
@@ -149,6 +201,28 @@ struct ChartDisplayView: View {
             Spacer()
             Text(value)
                 .fontWeight(.medium)
+        }
+    }
+
+    @ViewBuilder
+    private func transformSection(title: String, transforms: [PalaceTransform]) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            ForEach(Array(transforms.enumerated()), id: \.offset) { _, transform in
+                HStack {
+                    Text("\(transform.star)\(huaShortText(transform.hua))")
+                        .foregroundColor(huaColor(transform.hua))
+                    Spacer()
+                    Text("\(transform.targetPalace)-\(transform.targetPosition)")
+                        .foregroundColor(.secondary)
+                    Text("\(transform.strength)%")
+                        .foregroundColor(.secondary)
+                }
+                .font(.caption)
+            }
         }
     }
     

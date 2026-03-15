@@ -75,12 +75,26 @@ struct ZiWeiChartView: View {
         if let idx = index, idx < chart.palaces.count {
             let palace = chart.palaces[idx]
             let isMingGong = palace.name == "命宫"
+            let markers = palaceMarkers(for: palace)
             
             ZStack {
                 // 宫格背景
                 Rectangle()
                     .fill(isMingGong ? ZiWeiColors.mingGongHighlight : Color.clear)
                     .border(ZiWeiColors.border, width: 0.5)
+
+                if !markers.isEmpty {
+                    VStack(alignment: .trailing, spacing: 1) {
+                        ForEach(markers, id: \.self) { marker in
+                            Text(marker)
+                                .font(.system(size: cellSize * 0.08, weight: .bold))
+                                .foregroundColor(marker == "因" ? ZiWeiColors.huaJiColor : ZiWeiColors.huaQuanColor)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(.top, 3)
+                    .padding(.trailing, 4)
+                }
                 
                 VStack(alignment: .leading, spacing: 1) {
                     // 星曜列表
@@ -92,6 +106,16 @@ struct ZiWeiChartView: View {
                     HStack {
                         // 左下角：岁前/将前/博士
                         VStack(alignment: .leading, spacing: 0) {
+                            if !palace.suiQian.isEmpty {
+                                Text(palace.suiQian)
+                                    .font(.system(size: cellSize * 0.055))
+                                    .foregroundColor(ZiWeiColors.zaYaoColor)
+                            }
+                            if !palace.jiangQian.isEmpty {
+                                Text(palace.jiangQian)
+                                    .font(.system(size: cellSize * 0.055))
+                                    .foregroundColor(ZiWeiColors.zaYaoColor)
+                            }
                             if !palace.boshi.isEmpty {
                                 Text(palace.boshi)
                                     .font(.system(size: cellSize * 0.06))
@@ -108,6 +132,12 @@ struct ZiWeiChartView: View {
                                 Text(palace.daXian)
                                     .font(.system(size: cellSize * 0.065))
                                     .foregroundColor(ZiWeiColors.daXianColor)
+                            }
+
+                            if !palace.xiaoXian.isEmpty {
+                                Text(palace.xiaoXian)
+                                    .font(.system(size: cellSize * 0.06))
+                                    .foregroundColor(ZiWeiColors.huaQuanColor)
                             }
                             
                             // 宫干 + 地支
@@ -211,9 +241,21 @@ struct ZiWeiChartView: View {
             Text(chart.wuXingJu)
                 .font(.system(size: cellSize * 0.08))
                 .foregroundColor(ZiWeiColors.textDark)
+
+            Text("流年:\(chart.flowYearGanZhi)  虚岁:\(chart.nominalAge)")
+                .font(.system(size: cellSize * 0.075))
+                .foregroundColor(ZiWeiColors.textDark)
+
+            Text("来因:\(chart.laiYinGong)  流斗:\(chart.liuDou)")
+                .font(.system(size: cellSize * 0.075))
+                .foregroundColor(ZiWeiColors.textDark)
             
-            Text(chart.trueSolarTime)
-                .font(.system(size: cellSize * 0.07))
+            Text("钟表:\(chart.clockTime)")
+                .font(.system(size: cellSize * 0.065))
+                .foregroundColor(.secondary)
+
+            Text(chart.timeInputMode == .trueSolarTime ? "真太阳输入:\(chart.trueSolarTime)" : "真太阳:\(chart.trueSolarTime)")
+                .font(.system(size: cellSize * 0.065))
                 .foregroundColor(.secondary)
         }
     }
@@ -248,5 +290,19 @@ struct ZiWeiChartView: View {
         case "化忌": return ZiWeiColors.huaJiColor
         default: return .primary
         }
+    }
+
+    private func palaceMarkers(for palace: Palace) -> [String] {
+        var markers: [String] = []
+        if palace.position == chart.laiYinGong {
+            markers.append("因")
+        }
+        if palace.position == chart.layer2Gong {
+            markers.append("2")
+        }
+        if palace.position == chart.layer3Gong {
+            markers.append("3")
+        }
+        return markers
     }
 }

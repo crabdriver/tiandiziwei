@@ -34,6 +34,17 @@ struct Palace {
     var suiQian: String     // 岁前星
     var jiangQian: String   // 将前星
     var boshi: String       // 博士星
+    var gongTransforms: [PalaceTransform] // 宫干四化
+    var chongHua: [PalaceTransform]       // 冲化
+    var ziHua: [PalaceTransform]          // 自化
+}
+
+struct PalaceTransform {
+    let star: String
+    let hua: String
+    let targetPosition: String
+    let targetPalace: String
+    let strength: Int
 }
 
 /// 紫微排盘结果
@@ -50,9 +61,18 @@ struct ZiWeiChart {
     var lunarDate: LunarDate         // 阴历日期
     var trueSolarTime: String        // 真太阳时
     var clockTime: String            // 钟表时间
+    var flowYearGanZhi: String       // 当前流年干支
+    var liuDou: String               // 流斗
+    var laiYinGong: String           // 来因宫
+    var lunarMonthCount: Int         // APK `农历月计数`
+    var layer2Gong: String?          // APK `层2.1`，当前纯 Swift 版暂无稳定规则
+    var layer3Gong: String?          // APK `层3.1`，当前纯 Swift 版暂无稳定规则
+    var nominalAge: Int              // 当前虚岁
     var siHuaInfo: [String: String]  // 四化信息
     var isMale: Bool                 // 性别
     var isShun: Bool                 // 大限是否顺行
+    var timeInputMode: TimeInputMode // 时间输入模式
+    var useMonthAdjustment: Bool     // 是否启用换月
 }
 
 // MARK: - 紫微斗数排盘引擎
@@ -67,22 +87,10 @@ class ZiWeiEngine {
         "天府", "太阴", "贪狼", "巨门", "天相", "天梁", "七杀", "破军"
     ]
     
-    /// 十二宫名称（固定顺序，按逆时针排列）
+    /// 十二宫名称（按 APK 盘面顺序，从命宫起顺排）
     static let gongNames = [
-        "命宫", "兄弟宫", "夫妻宫", "子女宫", "财帛宫", "疾厄宫",
-        "迁移宫", "交友宫", "事业宫", "田宅宫", "福德宫", "父母宫"
-    ]
-    
-    /// 五行局对照表 (纳音五行 -> 局数)
-    /// 行号=天干(年干)索引, 列号=地支(命宫地支)索引
-    /// 水二局=2, 木三局=3, 金四局=4, 土五局=5, 火六局=6
-    static let wuXingJuTable: [[Int]] = [
-        // 子  丑  寅  卯  辰  巳  午  未  申  酉  戌  亥
-        [  2,  6,  3,  5,  4,  2,  6,  3,  5,  4,  2,  6], // 甲/己
-        [  6,  5,  2,  4,  3,  6,  5,  2,  4,  3,  6,  5], // 乙/庚
-        [  5,  4,  6,  3,  2,  5,  4,  6,  3,  2,  5,  4], // 丙/辛
-        [  4,  3,  5,  2,  6,  4,  3,  5,  2,  6,  4,  3], // 丁/壬
-        [  3,  2,  4,  6,  5,  3,  2,  4,  6,  5,  3,  2], // 戊/癸
+        "命宫", "父母宫", "福德宫", "田宅宫", "官禄宫", "交友宫",
+        "迁移宫", "疾厄宫", "财帛宫", "子女宫", "夫妻宫", "兄弟宫"
     ]
     
     /// 五行局名称对照
@@ -100,43 +108,32 @@ class ZiWeiEngine {
     /// 身主对照表(年支 -> 身主)
     static let shenZhuTable: [String: String] = [
         "子": "铃星", "丑": "天相", "寅": "天梁", "卯": "天同",
-        "辰": "文昌", "巳": "天机", "午": "火星", "未": "天相",
+        "辰": "文昌", "巳": "天机", "午": "铃星", "未": "天相",
         "申": "天梁", "酉": "天同", "戌": "文昌", "亥": "天机"
     ]
     
     /// 紫微星安星表 - 根据五行局数和农历日安紫微星
     /// 返回紫微星所在的地支索引(0=子, 1=丑, ...)
     static func locateZiWei(juNum: Int, day: Int) -> Int {
-        // 紫微星安星规则：五行局数起始排列
-        // 日数除以局数，用商和余数来确定紫微星位置
-        let quotient: Int
+        // 直接对齐 APK `zwpview.s(i3, i4)` 的规则：
+        // 先看日数除五行局的余数；若不能整除，则补足到可整除，
+        // 再按补足值奇偶决定前移还是后移，最后从寅宫起算。
         let remainder = day % juNum
-        
+        let offsetFromYin: Int
+
         if remainder == 0 {
-            quotient = day / juNum
+            offsetFromYin = (day / juNum) - 1
         } else {
-            quotient = day / juNum + 1
-        }
-        
-        // 根据余数调整商数
-        // 余数为0时，紫微星的初始位置从寅宫
-        // 具体算法：
-        // 起始位置 = 寅(索引2)
-        // 商数 - 1 即为从寅向前数的宫数
-        
-        var position = 2 + quotient - 1 // 寅宫(2) + 偏移
-        
-        // 余数校正
-        if remainder != 0 {
-            // 余数为偶数时逆行，奇数时顺行
-            if remainder % 2 == 0 {
-                position = position - remainder
+            let complement = juNum - remainder
+            let divisibleQuotient = (day + complement) / juNum
+            if complement % 2 == 0 {
+                offsetFromYin = divisibleQuotient + complement - 1
             } else {
-                position = position + remainder
+                offsetFromYin = divisibleQuotient - complement - 1
             }
         }
-        
-        return ((position % 12) + 12) % 12
+
+        return ((2 + offsetFromYin) % 12 + 12) % 12
     }
     
     /// 安紫微星系（紫微、天机、太阳、武曲、天同、廉贞）
@@ -170,26 +167,53 @@ class ZiWeiEngine {
         result["破军"] = (tianFuPos + 10) % 12
         return result
     }
+
+    static func zhiIndex(from pattern: String, at index: Int) -> Int {
+        let chars = Array(pattern)
+        guard index >= 0, index < chars.count else { return 0 }
+        return diZhi.firstIndex(of: String(chars[index])) ?? 0
+    }
+
+    static func xunKongPair(for ganZhi: String) -> (first: Int, second: Int)? {
+        guard let index = jiaZi.firstIndex(of: ganZhi) else { return nil }
+        switch index / 10 {
+        case 0: return (10, 11) // 戌亥
+        case 1: return (8, 9)   // 申酉
+        case 2: return (6, 7)   // 午未
+        case 3: return (4, 5)   // 辰巳
+        case 4: return (2, 3)   // 寅卯
+        case 5: return (0, 1)   // 子丑
+        default: return nil
+        }
+    }
     
     /// 安辅星
-    static func placeAuxiliaryStars(lunar: LunarDate) -> [String: Int] {
+    static func placeAuxiliaryStars(lunar: LunarDate, lunarMonthCount: Int) -> [String: Int] {
         var result: [String: Int] = [:]
-        let monthIdx = lunar.month - 1
+        let monthIdx = lunarMonthCount - 1
         let hourIdx = lunar.hourZhiIndex
         let yearZhiIdx = diZhi.firstIndex(of: lunar.yearZhi)!
+        let yearGanIdx = tianGan.firstIndex(of: lunar.yearGan)!
         
         // 左辅: 从辰宫起正月，顺行
         result["左辅"] = (4 + monthIdx) % 12
         // 右弼: 从戌宫起正月，逆行
         result["右弼"] = (10 - monthIdx + 12) % 12
+        result["天刑"] = (9 + monthIdx) % 12
+        result["天姚"] = (1 + monthIdx) % 12
+        result["阴煞"] = zhiIndex(from: "寅子戌申午辰寅子戌申午辰", at: monthIdx)
+        result["天月"] = zhiIndex(from: "戌巳辰寅未卯亥未寅午戌寅", at: monthIdx)
+        result["天巫"] = zhiIndex(from: "巳申寅亥巳申寅亥巳申寅亥", at: monthIdx)
+        result["解神"] = zhiIndex(from: "申申戌戌子子寅寅辰辰午午", at: monthIdx)
         
         // 文昌: 从戌宫起子时，逆行
         result["文昌"] = (10 - hourIdx + 12) % 12
         // 文曲: 从辰宫起子时，顺行
         result["文曲"] = (4 + hourIdx) % 12
+        result["台辅"] = (6 + hourIdx) % 12
+        result["封诰"] = (2 + hourIdx) % 12
         
         // 禄存: 根据年干
-        let yearGanIdx = tianGan.firstIndex(of: lunar.yearGan)!
         let luCunPos = [2, 3, 5, 6, 5, 6, 8, 9, 11, 0] // 甲寅乙卯丙巳...
         result["禄存"] = luCunPos[yearGanIdx]
         
@@ -216,31 +240,36 @@ class ZiWeiEngine {
         let tianYuePos = [7, 8, 9, 9, 7, 8, 1, 2, 5, 5]
         result["天魁"] = tianKuiPos[yearGanIdx]
         result["天钺"] = tianYuePos[yearGanIdx]
+        result["天官"] = zhiIndex(from: "未辰巳寅卯酉亥酉戌午", at: yearGanIdx)
+        result["天福"] = zhiIndex(from: "酉申子亥卯寅午巳午巳", at: yearGanIdx)
+        result["截空"] = zhiIndex(from: "申未辰卯子酉午巳寅丑", at: yearGanIdx)
+        result["副截"] = zhiIndex(from: "酉午巳寅丑申未辰卯子", at: yearGanIdx)
+        result["天厨"] = zhiIndex(from: "巳午子巳午申寅午酉亥", at: yearGanIdx)
         
         return result
     }
     
     /// 安杂曜
-    static func placeMiscStars(lunar: LunarDate) -> [String: Int] {
+    static func placeMiscStars(
+        lunar: LunarDate,
+        mingGongIdx: Int,
+        shenGongIdx: Int,
+        auxiliaryStars: [String: Int]
+    ) -> [String: Int] {
         var result: [String: Int] = [:]
         let yearZhiIdx = diZhi.firstIndex(of: lunar.yearZhi)!
-        let monthIdx = lunar.month - 1
-        let dayIdx = lunar.day - 1
-        let hourIdx = lunar.hourZhiIndex
         
         // 天马: 根据年支
-        let tianMaPos = [2, 11, 8, 5, 2, 11, 8, 5, 2, 11, 8, 5]
-        result["天马"] = tianMaPos[yearZhiIdx]
+        result["天马"] = zhiIndex(from: "寅亥申巳寅亥申巳寅亥申巳", at: yearZhiIdx)
         
         // 红鸾: 从卯宫起子年逆行
         result["红鸾"] = (3 - yearZhiIdx + 12) % 12
         // 天喜: 红鸾对宫
         result["天喜"] = (result["红鸾"]! + 6) % 12
         
-        // 天哭: 从午宫起子年顺行
-        result["天哭"] = (6 + yearZhiIdx) % 12
-        // 天虚: 从午宫起子年逆行
-        result["天虚"] = (6 - yearZhiIdx + 12) % 12
+        // APK 中天哭、天虚与旧实现方向相反
+        result["天哭"] = (6 - yearZhiIdx + 12) % 12
+        result["天虚"] = (6 + yearZhiIdx) % 12
         
         // 龙池: 从辰宫起子年顺行
         result["龙池"] = (4 + yearZhiIdx) % 12
@@ -256,11 +285,38 @@ class ZiWeiEngine {
         result["孤辰"] = guChenPos[yearZhiIdx]
         
         // 寡宿: 年支决定
-        let guaSuPos = [10, 10, 1, 1, 1, 4, 4, 4, 7, 7, 7, 10]
-        result["寡宿"] = guaSuPos[yearZhiIdx]
-        
-        // 天才: 从命宫起年支顺数到生月再顺数到生时
-        // 天寿: 从身宫起年支...（简化处理）
+        result["寡宿"] = zhiIndex(from: "戌戌丑丑丑辰辰辰未未未戌", at: yearZhiIdx)
+        result["劫煞"] = zhiIndex(from: "巳寅亥申巳寅亥申巳寅亥申", at: yearZhiIdx)
+        result["咸池"] = zhiIndex(from: "酉午卯子酉午卯子酉午卯子", at: yearZhiIdx)
+        result["破碎"] = zhiIndex(from: "巳丑酉巳丑酉巳丑酉巳丑酉", at: yearZhiIdx)
+        result["大耗"] = zhiIndex(from: "未午酉申亥戌丑子卯寅巳辰", at: yearZhiIdx)
+        result["蜚廉"] = zhiIndex(from: "申酉戌巳午未寅卯辰亥子丑", at: yearZhiIdx)
+        result["天德"] = (9 + yearZhiIdx) % 12
+        result["龙德"] = (yearZhiIdx + 7) % 12
+        result["月德"] = (5 + yearZhiIdx) % 12
+        result["年解"] = (10 - yearZhiIdx + 12) % 12
+        result["天空"] = (yearZhiIdx + 1) % 12
+        result["天才"] = (mingGongIdx + yearZhiIdx) % 12
+        result["天寿"] = (shenGongIdx + yearZhiIdx) % 12
+        result["天伤"] = (mingGongIdx + 5) % 12
+        result["天使"] = (mingGongIdx + 7) % 12
+        let dayOffset = lunar.day - 1
+        if let zuoFuPos = auxiliaryStars["左辅"] {
+            result["三台"] = (zuoFuPos + dayOffset) % 12
+        }
+        if let youBiPos = auxiliaryStars["右弼"] {
+            result["八座"] = (youBiPos - dayOffset + 12 * 3) % 12
+        }
+        if let wenQuPos = auxiliaryStars["文曲"] {
+            result["天贵"] = (wenQuPos + lunar.day - 2 + 12 * 3) % 12
+        }
+        if let wenChangPos = auxiliaryStars["文昌"] {
+            result["恩光"] = (wenChangPos + lunar.day - 2 + 12 * 3) % 12
+        }
+        if let xunKong = xunKongPair(for: lunar.yearGanZhi) {
+            result["副旬"] = xunKong.first
+            result["旬空"] = xunKong.second
+        }
         
         return result
     }
@@ -290,6 +346,27 @@ class ZiWeiEngine {
             stars[3]: "化忌"
         ]
     }
+
+    /// APK native `tools.getzwp()` 返回的宫干四化力度表。
+    /// 目前先按已核对的完整命例固化为“星 + 化”固定值，
+    /// 比此前用亮度线性换算更接近 APK 实际输出。
+    static let siHuaStrengthTable: [String: Int] = [
+        "廉贞|化禄": 10, "天机|化禄": 50, "天同|化禄": 99, "太阴|化禄": 40,
+        "贪狼|化禄": 50, "武曲|化禄": 90, "太阳|化禄": 60, "巨门|化禄": 20,
+        "天梁|化禄": 60, "破军|化禄": 50,
+
+        "破军|化权": 10, "天梁|化权": 90, "天机|化权": 20, "天同|化权": 20,
+        "太阴|化权": 90, "贪狼|化权": 90, "武曲|化权": 50, "太阳|化权": 20,
+        "紫微|化权": 80, "巨门|化权": 90,
+
+        "武曲|化科": 30, "紫微|化科": 90, "文昌|化科": 10, "天机|化科": 90,
+        "右弼|化科": 10, "天梁|化科": 15, "太阴|化科": 95, "文曲|化科": 20,
+        "左辅|化科": 10,
+
+        "太阳|化忌": 80, "太阴|化忌": 20, "廉贞|化忌": 10, "巨门|化忌": 30,
+        "天机|化忌": 95, "文曲|化忌": 30, "天同|化忌": 90, "文昌|化忌": 90,
+        "武曲|化忌": 50, "贪狼|化忌": 30
+    ]
     
     /// 确定命宫位置
     /// 命宫 = 从寅宫起正月顺数到生月，再从该宫逆数到生时
@@ -307,11 +384,11 @@ class ZiWeiEngine {
         return shenPos
     }
     
-    /// 安十二宫（从命宫开始逆时针排列）
+    /// 安十二宫（按 APK 盘面从命宫起顺排地支）
     static func arrangePalaces(mingGongIdx: Int) -> [(name: String, zhiIdx: Int)] {
         var result: [(name: String, zhiIdx: Int)] = []
         for i in 0..<12 {
-            let zhiIdx = (mingGongIdx - i + 12) % 12
+            let zhiIdx = (mingGongIdx + i) % 12
             result.append((name: gongNames[i], zhiIdx: zhiIdx))
         }
         return result
@@ -326,6 +403,30 @@ class ZiWeiEngine {
         let steps = (zhiIdx - 2 + 12) % 12
         let ganIdx = (start + steps) % 10
         return tianGan[ganIdx]
+    }
+
+    /// 根据命宫宫干支纳音计算五行局
+    static func calculateWuXingJu(yearGanIdx: Int, mingGongIdx: Int) -> (num: Int, name: String) {
+        let gongGan = palaceTianGan(yearGanIdx: yearGanIdx, zhiIdx: mingGongIdx)
+        let gongZhi = diZhi[mingGongIdx]
+        let naYin = naYinWuXing[gongGan + gongZhi] ?? ""
+
+        let juNum: Int
+        if naYin.contains("水") {
+            juNum = 2
+        } else if naYin.contains("木") {
+            juNum = 3
+        } else if naYin.contains("金") {
+            juNum = 4
+        } else if naYin.contains("土") {
+            juNum = 5
+        } else if naYin.contains("火") {
+            juNum = 6
+        } else {
+            juNum = 2
+        }
+
+        return (juNum, wuXingJuName[juNum] ?? "水二局")
     }
     
     /// 计算大限（根据五行局数和阴阳）
@@ -392,26 +493,186 @@ class ZiWeiEngine {
         if fuXingNames.contains(starName) { return .fuXing }
         return .zaYao
     }
+
+    /// APK 中的“换月”语义未完全还原。
+    /// 根据已拿到的 A/B 样本，当前更接近 APK 的做法是：
+    /// - 主盘骨架（四柱、命身宫、五行局等）仍按显示农历月
+    /// - 仅月系辅曜/杂曜链路使用“换月后的月计数”
+    static func adjustedLunarMonth(_ month: Int, useMonthAdjustment: Bool) -> Int {
+        guard useMonthAdjustment else { return month }
+        return month == 12 ? 1 : month + 1
+    }
+
+    static func advanceJiaZi(_ ganZhi: String, steps: Int) -> String {
+        guard let index = jiaZi.firstIndex(of: ganZhi) else { return ganZhi }
+        let safeIndex = ((index + steps) % 60 + 60) % 60
+        return jiaZi[safeIndex]
+    }
+
+    static func calculateLiuDou(flowYearZhi: String, hourZhi: String, lunarMonthCount: Int) -> String {
+        guard let hourIdx = diZhi.firstIndex(of: hourZhi) else { return "" }
+        let base = shiftZhi(flowYearZhi, steps: hourIdx - lunarMonthCount)
+        return shiftZhi(base, steps: 1)
+    }
+
+    static func shiftZhi(_ zhi: String, steps: Int) -> String {
+        guard let index = diZhi.firstIndex(of: zhi) else { return zhi }
+        let safeIndex = ((index + steps) % 12 + 12) % 12
+        return diZhi[safeIndex]
+    }
+
+    static func oppositeZhi(_ zhi: String) -> String {
+        shiftZhi(zhi, steps: 6)
+    }
+
+    /// APK 中 `其他信息.层1.1` 会在对应宫位旁标注“此为生年四化”。
+    /// 由于每宫四化是按该宫宫干起化，因此可确定来因宫就是“宫干等于生年天干”的宫位。
+    static func locateLaiYinGong(yearGan: String, palaces: [Palace], fallback: String) -> String {
+        palaces.first(where: { $0.tianGan == yearGan })?.position ?? fallback
+    }
+
+    static let huaDisplayOrder: [String: Int] = [
+        "化禄": 0,
+        "化权": 1,
+        "化科": 2,
+        "化忌": 3
+    ]
+
+    // APK 每宫的“四化”是该宫向外飞出的宫干四化；
+    // “自化/冲化”则是挂在当前宫星曜上的结果：
+    // - 自化：本宫发化且落回本宫
+    // - 冲化：对宫发化并飞入本宫
+    static func palaceTransforms(
+        palace: Palace,
+        allPalaces: [Palace]
+    ) -> [PalaceTransform] {
+        let transformMap = calculateSiHua(yearGan: palace.tianGan)
+        var transforms: [PalaceTransform] = []
+
+        for (starName, hua) in transformMap {
+            guard let targetPalace = allPalaces.first(where: { current in
+                current.stars.contains(where: { $0.name == starName })
+            }) else {
+                continue
+            }
+
+            let strength = siHuaStrengthTable["\(starName)|\(hua)"] ?? {
+                let targetZhiIdx = diZhi.firstIndex(of: targetPalace.position) ?? 0
+                let brightness = StarBrightnessTable
+                    .brightnessLevel(star: starName, zhiIndex: targetZhiIdx)?
+                    .value ?? 3
+                return Int((Double(brightness) / 7.0 * 100.0).rounded())
+            }()
+
+            transforms.append(
+                PalaceTransform(
+                    star: starName,
+                    hua: hua,
+                    targetPosition: targetPalace.position,
+                    targetPalace: targetPalace.name,
+                    strength: strength
+                )
+            )
+        }
+
+        transforms.sort {
+            let lhsOrder = huaDisplayOrder[$0.hua] ?? .max
+            let rhsOrder = huaDisplayOrder[$1.hua] ?? .max
+            if lhsOrder == rhsOrder { return $0.star < $1.star }
+            return lhsOrder < rhsOrder
+        }
+        return transforms
+    }
     
     // MARK: - 主排盘方法
     
     /// 执行完整的紫微排盘
     static func generateChart(
         year: Int, month: Int, day: Int, hour: Int, minute: Int,
-        isMale: Bool, longitude: Double = 120.0, timeZone: Int = 8
+        isMale: Bool,
+        timeInputMode: TimeInputMode = .clockTime,
+        isLeapMonth: Bool = false,
+        useMonthAdjustment: Bool = false,
+        longitude: Double = 120.0,
+        timeZone: Int = 8
     ) -> ZiWeiChart {
-        
-        // 0. 真太阳时修正
+        _ = timeZone
+
+        // 0. 将输入统一转换为公历日期
+        let originalSolarDate: SolarDate
+        if timeInputMode == .lunarTime,
+           let converted = LunarCalendarConverter.lunarToSolar(
+               year: year,
+               month: month,
+               day: day,
+               isLeapMonth: isLeapMonth
+           ) {
+            originalSolarDate = converted
+        } else {
+            originalSolarDate = SolarDate(year: year, month: month, day: day)
+        }
+
+        // 1. 真太阳时修正
         let solarTimeResult = TrueSolarTime.convert(
-            year: year, month: month, day: day,
-            hour: hour, minute: minute, longitude: longitude
+            year: originalSolarDate.year,
+            month: originalSolarDate.month,
+            day: originalSolarDate.day,
+            hour: hour,
+            minute: minute,
+            longitude: longitude
         )
-        let trueHour = solarTimeResult.trueSolarHour
-        let trueMinute = solarTimeResult.trueSolarMinute
-        
-        // 1. 公历转阴历
-        var lunar = LunarCalendarConverter.solarToLunar(year: year, month: month, day: day)
-        let hourIdx = LunarCalendarConverter.hourToShiChen(trueHour)
+        let clockTimeFromTrueSolar = TrueSolarTime.convertFromTrueSolar(
+            year: originalSolarDate.year,
+            month: originalSolarDate.month,
+            day: originalSolarDate.day,
+            hour: hour,
+            minute: minute,
+            longitude: longitude
+        )
+
+        let effectiveSolarYear: Int
+        let effectiveSolarMonth: Int
+        let effectiveSolarDay: Int
+        let effectiveHour: Int
+
+        switch timeInputMode {
+        case .clockTime:
+            effectiveSolarYear = originalSolarDate.year
+            effectiveSolarMonth = originalSolarDate.month
+            effectiveSolarDay = originalSolarDate.day
+            effectiveHour = hour
+        case .trueSolarTime:
+            effectiveSolarYear = originalSolarDate.year
+            effectiveSolarMonth = originalSolarDate.month
+            effectiveSolarDay = originalSolarDate.day
+            effectiveHour = hour
+        case .lunarTime:
+            effectiveSolarYear = originalSolarDate.year
+            effectiveSolarMonth = originalSolarDate.month
+            effectiveSolarDay = originalSolarDate.day
+            effectiveHour = hour
+        }
+
+        // 2. 公历转阴历
+        var lunar = LunarCalendarConverter.solarToLunar(
+            year: effectiveSolarYear,
+            month: effectiveSolarMonth,
+            day: effectiveSolarDay
+        )
+        let displayLunarMonth = lunar.month
+        let lunarMonthCount = adjustedLunarMonth(displayLunarMonth, useMonthAdjustment: useMonthAdjustment)
+        let monthGanZhi = LunarCalendarConverter.recalculateMonthGanZhi(
+            solarYear: effectiveSolarYear,
+            solarMonth: effectiveSolarMonth,
+            solarDay: effectiveSolarDay,
+            lunarYear: lunar.year,
+            lunarMonth: displayLunarMonth
+        )
+        lunar.monthGanZhi = monthGanZhi.ganZhi
+        lunar.monthGan = monthGanZhi.gan
+        lunar.monthZhi = monthGanZhi.zhi
+
+        let hourIdx = LunarCalendarConverter.hourToShiChen(effectiveHour)
         lunar.hourZhiIndex = hourIdx
         lunar.hourZhi = diZhi[hourIdx]
         
@@ -423,13 +684,14 @@ class ZiWeiEngine {
         lunar.hourGanZhi = lunar.hourGan + lunar.hourZhi
         
         // 2. 确定命宫和身宫
-        let mingGongIdx = locateMingGong(month: lunar.month, hourIdx: hourIdx)
-        let shenGongIdx = locateShenGong(month: lunar.month, hourIdx: hourIdx)
+        let mingGongIdx = locateMingGong(month: displayLunarMonth, hourIdx: hourIdx)
+        let shenGongIdx = locateShenGong(month: displayLunarMonth, hourIdx: hourIdx)
         
         // 3. 确定五行局
         let yearGanIdx = tianGan.firstIndex(of: lunar.yearGan)!
-        let juNum = wuXingJuTable[yearGanIdx % 5][mingGongIdx]
-        let juName = wuXingJuName[juNum]!
+        let wuXingJu = calculateWuXingJu(yearGanIdx: yearGanIdx, mingGongIdx: mingGongIdx)
+        let juNum = wuXingJu.num
+        let juName = wuXingJu.name
         
         // 4. 安十二宫
         let palaceArrangement = arrangePalaces(mingGongIdx: mingGongIdx)
@@ -440,10 +702,15 @@ class ZiWeiEngine {
         let tianFuSeries = placeTianFuSeries(ziWeiPos: ziWeiPos)
         
         // 6. 安辅星
-        let auxStars = placeAuxiliaryStars(lunar: lunar)
+        let auxStars = placeAuxiliaryStars(lunar: lunar, lunarMonthCount: lunarMonthCount)
         
         // 7. 安杂曜
-        let miscStars = placeMiscStars(lunar: lunar)
+        let miscStars = placeMiscStars(
+            lunar: lunar,
+            mingGongIdx: mingGongIdx,
+            shenGongIdx: shenGongIdx,
+            auxiliaryStars: auxStars
+        )
         
         // 8. 计算四化
         let siHua = calculateSiHua(yearGan: lunar.yearGan)
@@ -464,6 +731,20 @@ class ZiWeiEngine {
         let jiangQianMap = FlowYearStars.placeJiangQian(yearZhiIdx: yearZhiIdx)
         let luCunPos = auxStars["禄存"] ?? 0
         let boshiMap = FlowYearStars.placeBoshi(luCunPos: luCunPos, isShun: isShun)
+        let currentYear = Calendar.current.component(.year, from: Date())
+        let nominalAge = max(1, currentYear - lunar.year + 1)
+        let xiaoXianPos = FlowYearStars.xiaoXianPosition(
+            currentAge: nominalAge,
+            isMale: isMale,
+            yearZhiIdx: yearZhiIdx
+        )
+        let flowYearGanZhi = advanceJiaZi(lunar.yearGanZhi, steps: nominalAge - 1)
+        let flowYearZhi = String(flowYearGanZhi.suffix(1))
+        let liuDou = calculateLiuDou(
+            flowYearZhi: flowYearZhi,
+            hourZhi: lunar.hourZhi,
+            lunarMonthCount: displayLunarMonth
+        )
         
         // 13. 组装十二宫
         var palaces: [Palace] = []
@@ -503,7 +784,9 @@ class ZiWeiEngine {
             // 添加杂曜
             for (starName, pos) in miscStars {
                 if pos == arrangement.zhiIdx {
-                    starsInPalace.append(Star(name: starName, category: .zaYao))
+                    var star = Star(name: starName, category: .zaYao)
+                    star.brightness = StarBrightnessTable.brightness(star: starName, zhiIndex: arrangement.zhiIdx)
+                    starsInPalace.append(star)
                 }
             }
             
@@ -517,28 +800,76 @@ class ZiWeiEngine {
             let jiangQian = jiangQianMap[arrangement.zhiIdx] ?? ""
             let boshi = boshiMap[arrangement.zhiIdx] ?? ""
             
+            let xiaoXian = arrangement.zhiIdx == xiaoXianPos ? "\(nominalAge)岁" : ""
+
             let palace = Palace(
                 name: arrangement.name,
                 position: zhi,
                 tianGan: gongGan,
                 stars: starsInPalace,
                 daXian: daXian,
-                xiaoXian: "",
+                xiaoXian: xiaoXian,
                 changSheng: changSheng,
                 suiQian: suiQian,
                 jiangQian: jiangQian,
-                boshi: boshi
+                boshi: boshi,
+                gongTransforms: [],
+                chongHua: [],
+                ziHua: []
             )
             palaces.append(palace)
         }
+
+        for idx in palaces.indices {
+            palaces[idx].gongTransforms = palaceTransforms(palace: palaces[idx], allPalaces: palaces)
+        }
+
+        for idx in palaces.indices {
+            let currentPosition = palaces[idx].position
+            palaces[idx].ziHua = palaces[idx].gongTransforms.filter { $0.targetPosition == currentPosition }
+
+            let oppositePosition = oppositeZhi(currentPosition)
+            if let oppositePalace = palaces.first(where: { $0.position == oppositePosition }) {
+                palaces[idx].chongHua = oppositePalace.gongTransforms.filter { $0.targetPosition == currentPosition }
+            } else {
+                palaces[idx].chongHua = []
+            }
+        }
         
         // 命主和身主
-        let mingZhu = mingZhuTable[lunar.yearZhi] ?? ""
+        let mingZhu = mingZhuTable[diZhi[mingGongIdx]] ?? ""
         let shenZhu = shenZhuTable[lunar.yearZhi] ?? ""
+        let laiYinGong = locateLaiYinGong(
+            yearGan: lunar.yearGan,
+            palaces: palaces,
+            fallback: diZhi[mingGongIdx]
+        )
         
         // 真太阳时格式化
-        let trueSolarTimeStr = String(format: "%d-%d-%d %02d:%02d", year, month, day, trueHour, trueMinute)
-        let clockTimeStr = String(format: "%d-%d-%d %02d:%02d", year, month, day, hour, minute)
+        let trueSolarTimeStr: String
+        let clockTimeStr: String
+        switch timeInputMode {
+        case .clockTime, .lunarTime:
+            trueSolarTimeStr = solarTimeResult.formattedTrueSolarDateTime
+            clockTimeStr = String(
+                format: "%d-%d-%d %02d:%02d",
+                originalSolarDate.year,
+                originalSolarDate.month,
+                originalSolarDate.day,
+                hour,
+                minute
+            )
+        case .trueSolarTime:
+            trueSolarTimeStr = String(
+                format: "%d-%d-%d %02d:%02d",
+                originalSolarDate.year,
+                originalSolarDate.month,
+                originalSolarDate.day,
+                hour,
+                minute
+            )
+            clockTimeStr = clockTimeFromTrueSolar.formattedOriginalDateTime
+        }
         
         return ZiWeiChart(
             palaces: palaces,
@@ -553,9 +884,18 @@ class ZiWeiEngine {
             lunarDate: lunar,
             trueSolarTime: trueSolarTimeStr,
             clockTime: clockTimeStr,
+            flowYearGanZhi: flowYearGanZhi,
+            liuDou: liuDou,
+            laiYinGong: laiYinGong,
+            lunarMonthCount: lunarMonthCount,
+            layer2Gong: nil,
+            layer3Gong: nil,
+            nominalAge: nominalAge,
             siHuaInfo: siHua,
             isMale: isMale,
-            isShun: isShun
+            isShun: isShun,
+            timeInputMode: timeInputMode,
+            useMonthAdjustment: useMonthAdjustment
         )
     }
 }

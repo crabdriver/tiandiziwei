@@ -11,6 +11,8 @@ struct InputView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
+                let availableDays = viewModel.availableDays()
+
                 VStack(spacing: 20) {
                     // 顶部标题
                     headerView
@@ -44,15 +46,29 @@ struct InputView: View {
                         VStack(spacing: 12) {
                             // 阴阳历切换
                             HStack {
-                                Label("历法", systemImage: "calendar")
+                                Label("时间模式", systemImage: "calendar")
                                     .foregroundColor(.secondary)
                                 Spacer()
-                                Picker("历法", selection: $viewModel.input.isLunar) {
-                                    Text("阳历").tag(false)
-                                    Text("阴历").tag(true)
+                                Picker("时间模式", selection: $viewModel.input.timeInputMode) {
+                                    ForEach(TimeInputMode.allCases, id: \.self) { mode in
+                                        Text(mode.title).tag(mode)
+                                    }
                                 }
                                 .pickerStyle(.segmented)
-                                .frame(width: 120)
+                                .frame(width: 240)
+                            }
+
+                            if viewModel.input.timeInputMode == .lunarTime,
+                               viewModel.hasLeapMonthForCurrentSelection() {
+                                Toggle(isOn: $viewModel.input.isLeapMonth) {
+                                    Label("闰月", systemImage: "moonphase.waxing.crescent")
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+
+                            Toggle(isOn: $viewModel.input.useMonthAdjustment) {
+                                Label("换月", systemImage: "arrow.left.arrow.right")
+                                    .foregroundColor(.secondary)
                             }
                             
                             // 年月日
@@ -90,7 +106,7 @@ struct InputView: View {
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                     Picker("日", selection: $viewModel.input.day) {
-                                        ForEach(1...30, id: \.self) { day in
+                                        ForEach(availableDays, id: \.self) { day in
                                             Text("\(day)日").tag(day)
                                         }
                                     }
@@ -154,12 +170,7 @@ struct InputView: View {
                     // 高级设置
                     inputCard(title: "高级设置") {
                         VStack(spacing: 12) {
-                            Toggle(isOn: $viewModel.input.useTrueSolar) {
-                                Label("真太阳时", systemImage: "sun.max.fill")
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            if viewModel.input.useTrueSolar {
+                            if viewModel.usesLongitudeCorrection() {
                                 HStack {
                                     Label("经度", systemImage: "location.fill")
                                         .foregroundColor(.secondary)
@@ -208,6 +219,21 @@ struct InputView: View {
             .background(AppColors.groupedBackground)
             .navigationTitle("紫微星语")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                viewModel.normalizeInput()
+            }
+            .onChange(of: viewModel.input.timeInputMode) { _ in
+                viewModel.normalizeInput()
+            }
+            .onChange(of: viewModel.input.year) { _ in
+                viewModel.normalizeInput()
+            }
+            .onChange(of: viewModel.input.month) { _ in
+                viewModel.normalizeInput()
+            }
+            .onChange(of: viewModel.input.isLeapMonth) { _ in
+                viewModel.normalizeInput()
+            }
             .navigationDestination(isPresented: $showChartView) {
                 ChartDisplayView(viewModel: viewModel)
             }
