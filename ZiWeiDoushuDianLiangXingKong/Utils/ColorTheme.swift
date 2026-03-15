@@ -1,5 +1,5 @@
 // ColorTheme.swift - 配色主题
-// 紫微星语 iOS 版 - 颜色从原 Android 版提取
+// 紫微斗数-点亮星空版 iOS 版 - 颜色从原 Android 版提取
 
 import SwiftUI
 

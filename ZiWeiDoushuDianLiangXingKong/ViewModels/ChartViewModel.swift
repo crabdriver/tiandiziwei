@@ -1,5 +1,5 @@
 // ChartViewModel.swift - 排盘视图模型
-// 紫微星语 iOS 版
+// 紫微斗数-点亮星空版 iOS 版
 
 import Foundation
 import SwiftUI

@@ -1,5 +1,5 @@
 // LunarCalendar.swift - 阴阳历转换核心算法
-// 紫微星语 iOS 版
+// 紫微斗数-点亮星空版 iOS 版
 
 import Foundation
 

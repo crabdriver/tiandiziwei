@@ -10,7 +10,7 @@
 		0BBBF525AFE087C665D2E3F3 /* ChartDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D2C6740E4D06BE31B1A32E /* ChartDisplayView.swift */; };
 		173962DD66C4A1751AD3E3C5 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A7A9E356C69A3D02B370D /* InputView.swift */; };
 		1C0BBC2EDAA72E2B0ED22206 /* LunarCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EECAA68FD75B62267060F315 /* LunarCalendar.swift */; };
-		264DB4027D2DA80B72D48B06 /* ziweiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B11F3A82D541970B8D78CA8 /* ziweiApp.swift */; };
+		264DB4027D2DA80B72D48B06 /* ZiWeiDoushuDianLiangXingKongApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B11F3A82D541970B8D78CA8 /* ZiWeiDoushuDianLiangXingKongApp.swift */; };
 		356CF9846B7125E6EEA63BA4 /* TrueSolarTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9C633395EF38C2866D41A /* TrueSolarTime.swift */; };
 		388525CFC46DC5BF6A5925BF /* ZiWeiChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9764C459C42F6761EC33E6 /* ZiWeiChartView.swift */; };
 		6477AB9E157D97552448FADD /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBA4C567D5811586D5DF5D7 /* ChartViewModel.swift */; };
@@ -27,8 +27,8 @@
 		489D3B3C60584BC7F3A62800 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		540A7A9E356C69A3D02B370D /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
 		5FBA4C567D5811586D5DF5D7 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
-		6621CDDAD3AD4E9F11B9EF9F /* ziwei.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ziwei.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B11F3A82D541970B8D78CA8 /* ziweiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ziweiApp.swift; sourceTree = "<group>"; };
+		6621CDDAD3AD4E9F11B9EF9F /* ZiWeiDoushuDianLiangXingKong.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ZiWeiDoushuDianLiangXingKong.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B11F3A82D541970B8D78CA8 /* ZiWeiDoushuDianLiangXingKongApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiDoushuDianLiangXingKongApp.swift; sourceTree = "<group>"; };
 		84D2C6740E4D06BE31B1A32E /* ChartDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDisplayView.swift; sourceTree = "<group>"; };
 		89CADC986ADD6745EF58277E /* FlowYearStars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowYearStars.swift; sourceTree = "<group>"; };
 		9D9764C459C42F6761EC33E6 /* ZiWeiChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiChartView.swift; sourceTree = "<group>"; };
@@ -90,7 +90,7 @@
 		B31362BC9E4D35FCAD15B015 = {
 			isa = PBXGroup;
 			children = (
-				F9BC042AF137EE20003E9208 /* ziwei */,
+				F9BC042AF137EE20003E9208 /* ZiWeiDoushuDianLiangXingKong */,
 				C035CE5104BE5CA2527AC991 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,30 +98,30 @@
 		C035CE5104BE5CA2527AC991 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6621CDDAD3AD4E9F11B9EF9F /* ziwei.app */,
+				6621CDDAD3AD4E9F11B9EF9F /* ZiWeiDoushuDianLiangXingKong.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F9BC042AF137EE20003E9208 /* ziwei */ = {
+		F9BC042AF137EE20003E9208 /* ZiWeiDoushuDianLiangXingKong */ = {
 			isa = PBXGroup;
 			children = (
-				6B11F3A82D541970B8D78CA8 /* ziweiApp.swift */,
+				6B11F3A82D541970B8D78CA8 /* ZiWeiDoushuDianLiangXingKongApp.swift */,
 				58108EC0E458AF242D92C7CD /* Models */,
 				9C8CFB76B70E7C85229E62E5 /* Resources */,
 				29747222D5E9C183B399EE85 /* Utils */,
 				0346FF409E753F0EAE986828 /* ViewModels */,
 				2B00D7D3CCC51F20730DF3D3 /* Views */,
 			);
-			path = ziwei;
+			path = ZiWeiDoushuDianLiangXingKong;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E990CADF18D556B5BCC1E36A /* ziwei */ = {
+		E990CADF18D556B5BCC1E36A /* ZiWeiDoushuDianLiangXingKong */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0DF420AC3F60DA7364B1485D /* Build configuration list for PBXNativeTarget "ziwei" */;
+			buildConfigurationList = 0DF420AC3F60DA7364B1485D /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKong" */;
 			buildPhases = (
 				3AC4BB7F633729AE2AA347EE /* Sources */,
 				8086689369A517373083C00B /* Resources */,
@@ -130,11 +130,11 @@
 			);
 			dependencies = (
 			);
-			name = ziwei;
+			name = ZiWeiDoushuDianLiangXingKong;
 			packageProductDependencies = (
 			);
-			productName = ziwei;
-			productReference = 6621CDDAD3AD4E9F11B9EF9F /* ziwei.app */;
+			productName = ZiWeiDoushuDianLiangXingKong;
+			productReference = 6621CDDAD3AD4E9F11B9EF9F /* ZiWeiDoushuDianLiangXingKong.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -151,7 +151,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5200FF96C2E0FEEA67ABEE64 /* Build configuration list for PBXProject "ziwei" */;
+			buildConfigurationList = 5200FF96C2E0FEEA67ABEE64 /* Build configuration list for PBXProject "ZiWeiDoushuDianLiangXingKong" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -165,7 +165,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E990CADF18D556B5BCC1E36A /* ziwei */,
+				E990CADF18D556B5BCC1E36A /* ZiWeiDoushuDianLiangXingKong */,
 			);
 		};
 /* End PBXProject section */
@@ -197,7 +197,7 @@
 				356CF9846B7125E6EEA63BA4 /* TrueSolarTime.swift in Sources */,
 				388525CFC46DC5BF6A5925BF /* ZiWeiChartView.swift in Sources */,
 				AB11F854A270853CB2711AFA /* ZiWeiEngine.swift in Sources */,
-				264DB4027D2DA80B72D48B06 /* ziweiApp.swift in Sources */,
+				264DB4027D2DA80B72D48B06 /* ZiWeiDoushuDianLiangXingKongApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,7 +331,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "紫微星语";
+				INFOPLIST_KEY_CFBundleDisplayName = "紫微斗数-点亮星空版";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -340,7 +340,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ziweixingyu.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -355,7 +355,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "紫微星语";
+				INFOPLIST_KEY_CFBundleDisplayName = "紫微斗数-点亮星空版";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -364,7 +364,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ziweixingyu.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -374,7 +374,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0DF420AC3F60DA7364B1485D /* Build configuration list for PBXNativeTarget "ziwei" */ = {
+		0DF420AC3F60DA7364B1485D /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKong" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9135CD05011CDF9AF67A3385 /* Debug */,
@@ -383,7 +383,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		5200FF96C2E0FEEA67ABEE64 /* Build configuration list for PBXProject "ziwei" */ = {
+		5200FF96C2E0FEEA67ABEE64 /* Build configuration list for PBXProject "ZiWeiDoushuDianLiangXingKong" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0CB71993C5EC004B0A74599F /* Debug */,

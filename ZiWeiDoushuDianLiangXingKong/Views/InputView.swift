@@ -1,5 +1,5 @@
 // InputView.swift - 输入页面
-// 紫微星语 iOS 版
+// 紫微斗数-点亮星空版 iOS 版
 
 import SwiftUI
 
@@ -217,7 +217,7 @@ struct InputView: View {
                 .padding()
             }
             .background(AppColors.groupedBackground)
-            .navigationTitle("紫微星语")
+            .navigationTitle("紫微斗数-点亮星空版")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.normalizeInput()
@@ -248,9 +248,11 @@ struct InputView: View {
                 .font(.system(size: 50))
                 .foregroundStyle(AppColors.primaryGradient)
             
-            Text("紫微星语")
+            Text("紫微斗数-点亮星空版")
                 .font(.system(size: 28, weight: .bold, design: .serif))
                 .foregroundColor(ZiWeiColors.textDark)
+                .lineLimit(1)
+                .minimumScaleFactor(0.65)
             
             Text("紫微斗数 · 四柱八字")
                 .font(.subheadline)

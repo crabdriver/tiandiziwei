@@ -1,5 +1,5 @@
 // ZiWeiChartView.swift - 紫微盘面视图
-// 紫微星语 iOS 版 - 使用 SwiftUI Canvas 绘制
+// 紫微斗数-点亮星空版 iOS 版 - 使用 SwiftUI Canvas 绘制
 
 import SwiftUI
 
@@ -207,9 +207,11 @@ struct ZiWeiChartView: View {
     private func centerView(cellSize: CGFloat) -> some View {
         VStack(spacing: 4) {
             // 标题
-            Text("紫微星语")
+            Text("紫微斗数-点亮星空版")
                 .font(.system(size: cellSize * 0.14, weight: .bold, design: .serif))
                 .foregroundColor(ZiWeiColors.textDark)
+                .lineLimit(1)
+                .minimumScaleFactor(0.45)
             
             // 信息行
             HStack(spacing: 8) {

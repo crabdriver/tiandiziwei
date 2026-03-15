@@ -1,5 +1,5 @@
 // ChartDisplayView.swift - 排盘结果显示页
-// 紫微星语 iOS 版
+// 紫微斗数-点亮星空版 iOS 版
 
 import SwiftUI
 

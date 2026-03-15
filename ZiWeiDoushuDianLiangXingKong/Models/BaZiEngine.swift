@@ -1,5 +1,5 @@
 // BaZiEngine.swift - 四柱八字排盘引擎
-// 紫微星语 iOS 版
+// 紫微斗数-点亮星空版 iOS 版
 // 数据表直接提取自 Android 版 bazipaipan.java
 
 import Foundation
