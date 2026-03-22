@@ -65,8 +65,8 @@ struct ZiWeiChart {
     var liuDou: String               // 流斗
     var laiYinGong: String           // 来因宫
     var lunarMonthCount: Int         // APK `农历月计数`
-    var layer2Gong: String?          // APK `层2.1`，当前纯 Swift 版暂无稳定规则
-    var layer3Gong: String?          // APK `层3.1`，当前纯 Swift 版暂无稳定规则
+    var layer2Gong: String?          // APK `层2.1`，由 native libziweixingyu.so 计算，iOS 版暂不实现
+    var layer3Gong: String?          // APK `层3.1`，由 native libziweixingyu.so 计算，iOS 版暂不实现
     var nominalAge: Int              // 当前虚岁
     var siHuaInfo: [String: String]  // 四化信息
     var isMale: Bool                 // 性别
@@ -236,8 +236,8 @@ class ZiWeiEngine {
         result["地劫"] = (11 + hourIdx) % 12
         
         // 天魁天钺(根据年干)
-        let tianKuiPos = [1, 0, 11, 11, 1, 0, 7, 6, 3, 3] // 甲丑乙子...
-        let tianYuePos = [7, 8, 9, 9, 7, 8, 1, 2, 5, 5]
+        let tianKuiPos = [1, 0, 11, 9, 2, 8, 7, 6, 5, 3] // APK: 丑子亥酉寅申未午巳卯
+        let tianYuePos = [7, 8, 9, 11, 6, 0, 1, 2, 3, 5] // APK: 未申酉亥午子丑寅卯巳
         result["天魁"] = tianKuiPos[yearGanIdx]
         result["天钺"] = tianYuePos[yearGanIdx]
         result["天官"] = zhiIndex(from: "未辰巳寅卯酉亥酉戌午", at: yearGanIdx)
@@ -314,8 +314,14 @@ class ZiWeiEngine {
             result["恩光"] = (wenChangPos + lunar.day - 2 + 12 * 3) % 12
         }
         if let xunKong = xunKongPair(for: lunar.yearGanZhi) {
-            result["副旬"] = xunKong.first
-            result["旬空"] = xunKong.second
+            let yearGanIdx = tianGan.firstIndex(of: lunar.yearGan) ?? 0
+            if yearGanIdx % 2 == 0 {
+                result["旬空"] = xunKong.first
+                result["副旬"] = xunKong.second
+            } else {
+                result["副旬"] = xunKong.first
+                result["旬空"] = xunKong.second
+            }
         }
         
         return result
@@ -429,23 +435,14 @@ class ZiWeiEngine {
         return (juNum, wuXingJuName[juNum] ?? "水二局")
     }
     
-    /// 计算大限（根据五行局数和阴阳）
-    static func calculateDaXian(juNum: Int, isMale: Bool, yearGanIdx: Int) -> [(start: Int, end: Int)] {
-        // 阳男阴女顺行，阴男阳女逆行
-        let isYangGan = yearGanIdx % 2 == 0
-        let isShun = (isMale && isYangGan) || (!isMale && !isYangGan)
-        
+    /// 计算 12 段大限年龄区间，真正挂到哪一宫由顺逆行决定。
+    static func calculateDaXian(juNum: Int) -> [(start: Int, end: Int)] {
         var result: [(start: Int, end: Int)] = []
         for i in 0..<12 {
             let start = juNum + i * 10
             let end = start + 9
             result.append((start: start, end: end))
         }
-        
-        if !isShun {
-            result.reverse()
-        }
-        
         return result
     }
     
@@ -600,12 +597,17 @@ class ZiWeiEngine {
 
         // 0. 将输入统一转换为公历日期
         let originalSolarDate: SolarDate
+        let normalizedIsLeapMonth =
+            timeInputMode == .lunarTime &&
+            isLeapMonth &&
+            LunarCalendarConverter.leapMonth(year) == month
+
         if timeInputMode == .lunarTime,
            let converted = LunarCalendarConverter.lunarToSolar(
                year: year,
                month: month,
                day: day,
-               isLeapMonth: isLeapMonth
+               isLeapMonth: normalizedIsLeapMonth
            ) {
             originalSolarDate = converted
         } else {
@@ -630,41 +632,78 @@ class ZiWeiEngine {
             longitude: longitude
         )
 
-        let effectiveSolarYear: Int
-        let effectiveSolarMonth: Int
-        let effectiveSolarDay: Int
-        let effectiveHour: Int
+        let timeBasisSolarYear: Int
+        let timeBasisSolarMonth: Int
+        let timeBasisSolarDay: Int
+        let timeBasisHour: Int
+        let timeBasisMinute: Int
 
         switch timeInputMode {
         case .clockTime:
-            effectiveSolarYear = originalSolarDate.year
-            effectiveSolarMonth = originalSolarDate.month
-            effectiveSolarDay = originalSolarDate.day
-            effectiveHour = hour
+            timeBasisSolarYear = solarTimeResult.trueSolarYear
+            timeBasisSolarMonth = solarTimeResult.trueSolarMonth
+            timeBasisSolarDay = solarTimeResult.trueSolarDay
+            timeBasisHour = solarTimeResult.trueSolarHour
+            timeBasisMinute = solarTimeResult.trueSolarMinute
         case .trueSolarTime:
-            effectiveSolarYear = originalSolarDate.year
-            effectiveSolarMonth = originalSolarDate.month
-            effectiveSolarDay = originalSolarDate.day
-            effectiveHour = hour
+            timeBasisSolarYear = originalSolarDate.year
+            timeBasisSolarMonth = originalSolarDate.month
+            timeBasisSolarDay = originalSolarDate.day
+            timeBasisHour = hour
+            timeBasisMinute = minute
         case .lunarTime:
-            effectiveSolarYear = originalSolarDate.year
-            effectiveSolarMonth = originalSolarDate.month
-            effectiveSolarDay = originalSolarDate.day
-            effectiveHour = hour
+            timeBasisSolarYear = solarTimeResult.trueSolarYear
+            timeBasisSolarMonth = solarTimeResult.trueSolarMonth
+            timeBasisSolarDay = solarTimeResult.trueSolarDay
+            timeBasisHour = solarTimeResult.trueSolarHour
+            timeBasisMinute = solarTimeResult.trueSolarMinute
         }
 
         // 2. 公历转阴历
         var lunar = LunarCalendarConverter.solarToLunar(
-            year: effectiveSolarYear,
-            month: effectiveSolarMonth,
-            day: effectiveSolarDay
+            year: timeBasisSolarYear,
+            month: timeBasisSolarMonth,
+            day: timeBasisSolarDay
         )
+        let rawChartYearGan = lunar.yearGan
+        let rawChartYearZhi = lunar.yearZhi
         let displayLunarMonth = lunar.month
         let lunarMonthCount = adjustedLunarMonth(displayLunarMonth, useMonthAdjustment: useMonthAdjustment)
+        let hourIdx = LunarCalendarConverter.hourToShiChen(timeBasisHour)
+        lunar.hourZhiIndex = hourIdx
+        lunar.hourZhi = diZhi[hourIdx]
+
+        let pillarDayOffset = hourIdx == 0 ? 1 : 0
+        var pillarCalendar = Calendar(identifier: .gregorian)
+        pillarCalendar.timeZone = TimeZone(secondsFromGMT: 8 * 3600)!
+        var pillarComponents = DateComponents()
+        pillarComponents.year = timeBasisSolarYear
+        pillarComponents.month = timeBasisSolarMonth
+        pillarComponents.day = timeBasisSolarDay
+        let basePillarDate = pillarCalendar.date(from: pillarComponents)!
+        let pillarDate = pillarCalendar.date(byAdding: .day, value: pillarDayOffset, to: basePillarDate)!
+        let pillarDateComponents = pillarCalendar.dateComponents([.year, .month, .day], from: pillarDate)
+        let pillarSolarYear = pillarDateComponents.year ?? timeBasisSolarYear
+        let pillarSolarMonth = pillarDateComponents.month ?? timeBasisSolarMonth
+        let pillarSolarDay = pillarDateComponents.day ?? timeBasisSolarDay
+
+        let displayYearGanZhi = LunarCalendarConverter.recalculateYearGanZhi(
+            solarYear: pillarSolarYear,
+            solarMonth: pillarSolarMonth,
+            solarDay: pillarSolarDay,
+            solarHour: timeBasisHour,
+            solarMinute: timeBasisMinute
+        )
+        lunar.yearGanZhi = displayYearGanZhi.ganZhi
+        lunar.yearGan = displayYearGanZhi.gan
+        lunar.yearZhi = displayYearGanZhi.zhi
+
         let monthGanZhi = LunarCalendarConverter.recalculateMonthGanZhi(
-            solarYear: effectiveSolarYear,
-            solarMonth: effectiveSolarMonth,
-            solarDay: effectiveSolarDay,
+            solarYear: timeBasisSolarYear,
+            solarMonth: timeBasisSolarMonth,
+            solarDay: timeBasisSolarDay,
+            solarHour: timeBasisHour,
+            solarMinute: timeBasisMinute,
             lunarYear: lunar.year,
             lunarMonth: displayLunarMonth
         )
@@ -672,9 +711,14 @@ class ZiWeiEngine {
         lunar.monthGan = monthGanZhi.gan
         lunar.monthZhi = monthGanZhi.zhi
 
-        let hourIdx = LunarCalendarConverter.hourToShiChen(effectiveHour)
-        lunar.hourZhiIndex = hourIdx
-        lunar.hourZhi = diZhi[hourIdx]
+        let dayGanZhi = LunarCalendarConverter.recalculateDayGanZhi(
+            solarYear: pillarSolarYear,
+            solarMonth: pillarSolarMonth,
+            solarDay: pillarSolarDay
+        )
+        lunar.dayGanZhi = dayGanZhi.ganZhi
+        lunar.dayGan = dayGanZhi.gan
+        lunar.dayZhi = dayGanZhi.zhi
         
         // 重新计算时干
         let dayGanIdx = tianGan.firstIndex(of: lunar.dayGan)!
@@ -688,7 +732,9 @@ class ZiWeiEngine {
         let shenGongIdx = locateShenGong(month: displayLunarMonth, hourIdx: hourIdx)
         
         // 3. 确定五行局
-        let yearGanIdx = tianGan.firstIndex(of: lunar.yearGan)!
+        let chartYearGan = hourIdx == 0 ? displayYearGanZhi.gan : rawChartYearGan
+        let chartYearZhi = hourIdx == 0 ? displayYearGanZhi.zhi : rawChartYearZhi
+        let yearGanIdx = tianGan.firstIndex(of: chartYearGan)!
         let wuXingJu = calculateWuXingJu(yearGanIdx: yearGanIdx, mingGongIdx: mingGongIdx)
         let juNum = wuXingJu.num
         let juName = wuXingJu.name
@@ -713,20 +759,20 @@ class ZiWeiEngine {
         )
         
         // 8. 计算四化
-        let siHua = calculateSiHua(yearGan: lunar.yearGan)
+        let siHua = calculateSiHua(yearGan: chartYearGan)
         
         // 9. 大限方向
         let isYangGan = yearGanIdx % 2 == 0
         let isShun = (isMale && isYangGan) || (!isMale && !isYangGan)
         
         // 10. 计算大限
-        let daXianList = calculateDaXian(juNum: juNum, isMale: isMale, yearGanIdx: yearGanIdx)
+        let daXianList = calculateDaXian(juNum: juNum)
         
         // 11. 长生十二宫
         let changShengMap = calculateChangSheng(juNum: juNum, isShun: isShun)
         
         // 12. 流年星系
-        let yearZhiIdx = diZhi.firstIndex(of: lunar.yearZhi)!
+        let yearZhiIdx = diZhi.firstIndex(of: chartYearZhi)!
         let suiJianMap = FlowYearStars.placeSuiJian(yearZhiIdx: yearZhiIdx)
         let jiangQianMap = FlowYearStars.placeJiangQian(yearZhiIdx: yearZhiIdx)
         let luCunPos = auxStars["禄存"] ?? 0
@@ -790,7 +836,8 @@ class ZiWeiEngine {
                 }
             }
             
-            let daXian = idx < daXianList.count ? "\(daXianList[idx].start)~\(daXianList[idx].end)" : ""
+            let daXianIndex = isShun ? idx : (12 - idx) % 12
+            let daXian = daXianIndex < daXianList.count ? "\(daXianList[daXianIndex].start)~\(daXianList[daXianIndex].end)" : ""
             
             // 长生
             let changSheng = changShengMap[arrangement.zhiIdx] ?? ""
@@ -838,9 +885,9 @@ class ZiWeiEngine {
         
         // 命主和身主
         let mingZhu = mingZhuTable[diZhi[mingGongIdx]] ?? ""
-        let shenZhu = shenZhuTable[lunar.yearZhi] ?? ""
+        let shenZhu = shenZhuTable[chartYearZhi] ?? ""
         let laiYinGong = locateLaiYinGong(
-            yearGan: lunar.yearGan,
+            yearGan: chartYearGan,
             palaces: palaces,
             fallback: diZhi[mingGongIdx]
         )

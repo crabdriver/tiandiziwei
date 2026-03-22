@@ -169,9 +169,44 @@ class ChartViewModel: ObservableObject {
     /// 获取时辰显示文字
     func shiChenText(for hour: Int) -> String {
         let shiChenNames = ["子时(23-1)", "丑时(1-3)", "寅时(3-5)", "卯时(5-7)",
-                           "辰时(7-9)", "巳时(9-11)", "午时(11-13)", "未时(13-15)",
-                           "申时(15-17)", "酉时(17-19)", "戌时(19-21)", "亥时(21-23)"]
-        let idx = LunarCalendarConverter.hourToShiChen(hour)
+                            "辰时(7-9)", "巳时(9-11)", "午时(11-13)", "未时(13-15)",
+                            "申时(15-17)", "酉时(17-19)", "戌时(19-21)", "亥时(21-23)"]
+
+        let idx: Int
+
+        switch input.timeInputMode {
+        case .trueSolarTime:
+            idx = LunarCalendarConverter.hourToShiChen(hour)
+        case .clockTime:
+            let solarTime = TrueSolarTime.convert(
+                year: input.year,
+                month: input.month,
+                day: input.day,
+                hour: input.hour,
+                minute: input.minute,
+                longitude: input.longitude
+            )
+            idx = LunarCalendarConverter.hourToShiChen(solarTime.trueSolarHour)
+        case .lunarTime:
+            if let solar = LunarCalendarConverter.lunarToSolar(
+                year: input.year,
+                month: input.month,
+                day: input.day,
+                isLeapMonth: input.isLeapMonth
+            ) {
+                let solarTime = TrueSolarTime.convert(
+                    year: solar.year,
+                    month: solar.month,
+                    day: solar.day,
+                    hour: input.hour,
+                    minute: input.minute,
+                    longitude: input.longitude
+                )
+                idx = LunarCalendarConverter.hourToShiChen(solarTime.trueSolarHour)
+            } else {
+                idx = LunarCalendarConverter.hourToShiChen(hour)
+            }
+        }
         return shiChenNames[idx]
     }
 

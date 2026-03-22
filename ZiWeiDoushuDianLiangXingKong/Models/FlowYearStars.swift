@@ -126,15 +126,8 @@ struct FlowYearStars {
     /// 计算当前年龄对应的大限宫位
     static func currentDaXian(age: Int, juNum: Int, isShun: Bool) -> (gongIdx: Int, startAge: Int, endAge: Int)? {
         for i in 0..<12 {
-            let start: Int
-            let gongIdx: Int
-            if isShun {
-                start = juNum + i * 10
-                gongIdx = i
-            } else {
-                start = juNum + i * 10
-                gongIdx = 11 - i
-            }
+            let start = juNum + i * 10
+            let gongIdx = isShun ? i : (12 - i) % 12
             let end = start + 9
             if age >= start && age <= end {
                 return (gongIdx: gongIdx, startAge: start, endAge: end)

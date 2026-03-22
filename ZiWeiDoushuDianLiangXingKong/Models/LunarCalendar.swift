@@ -357,10 +357,14 @@ class LunarCalendarConverter {
         )
     }
     
-    /// 将小时转换为时辰索引
+    /// 将小时转换为时辰索引（传统子初起算：23 点入子时）
     static func hourToShiChen(_ hour: Int) -> Int {
-        // 23-1:子(0), 1-3:丑(1), 3-5:寅(2), ...
-        return ((hour + 1) / 2) % 12
+        ((hour + 1) / 2) % 12
+    }
+
+    /// 将钟表小时转换为时辰索引（北京时间样本对照：00 点入子时）
+    static func hourToShiChenClockTime(_ hour: Int) -> Int {
+        (hour / 2) % 12
     }
 
     private static func solarTermDate(year: Int, termIndex: Int) -> Date {
@@ -376,13 +380,14 @@ class LunarCalendarConverter {
         return baseDate.addingTimeInterval(seconds)
     }
 
-    private static func solarMonthIndex(year: Int, month: Int, day: Int) -> Int {
+    private static func solarMonthIndex(year: Int, month: Int, day: Int, hour: Int, minute: Int) -> Int {
         let calendar = gregorianCalendar
         var components = DateComponents()
         components.year = year
         components.month = month
         components.day = day
-        components.hour = 12
+        components.hour = hour
+        components.minute = minute
         let targetDate = calendar.date(from: components)!
 
         let xiaoHan = solarTermDate(year: year, termIndex: 0)
@@ -413,16 +418,68 @@ class LunarCalendarConverter {
         return 11                               // 子月
     }
 
-    private static func solarYearForMonthPillar(year: Int, month: Int, day: Int) -> Int {
+    private static func solarYearForMonthPillar(year: Int, month: Int, day: Int, hour: Int, minute: Int) -> Int {
         let calendar = gregorianCalendar
         var components = DateComponents()
         components.year = year
         components.month = month
         components.day = day
-        components.hour = 12
+        components.hour = hour
+        components.minute = minute
         let targetDate = calendar.date(from: components)!
         let liChun = solarTermDate(year: year, termIndex: 2)
         return targetDate < liChun ? year - 1 : year
+    }
+
+    static func recalculateYearGanZhi(
+        solarYear: Int,
+        solarMonth: Int,
+        solarDay: Int,
+        solarHour: Int,
+        solarMinute: Int
+    ) -> (ganZhi: String, gan: String, zhi: String) {
+        let effectiveYear = solarYearForMonthPillar(
+            year: solarYear,
+            month: solarMonth,
+            day: solarDay,
+            hour: solarHour,
+            minute: solarMinute
+        )
+        let yearOffset = effectiveYear - 4
+        let yearGanIdx = ((yearOffset % 10) + 10) % 10
+        let yearZhiIdx = ((yearOffset % 12) + 12) % 12
+        let gan = tianGan[yearGanIdx]
+        let zhi = diZhi[yearZhiIdx]
+        return (gan + zhi, gan, zhi)
+    }
+
+    static func recalculateDayGanZhi(
+        solarYear: Int,
+        solarMonth: Int,
+        solarDay: Int
+    ) -> (ganZhi: String, gan: String, zhi: String) {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = gregorianTimeZone
+
+        var baseComp = DateComponents()
+        baseComp.year = 1900
+        baseComp.month = 1
+        baseComp.day = 1
+        let base = calendar.date(from: baseComp)!
+
+        var targetComp = DateComponents()
+        targetComp.year = solarYear
+        targetComp.month = solarMonth
+        targetComp.day = solarDay
+        let target = calendar.date(from: targetComp)!
+
+        let daysDiff = calendar.dateComponents([.day], from: base, to: target).day!
+        let dayGanZhiIdx = (daysDiff + 10) % 60
+        let dGanIdx = ((dayGanZhiIdx % 10) + 10) % 10
+        let dZhiIdx = ((dayGanZhiIdx % 12) + 12) % 12
+        let gan = tianGan[dGanIdx]
+        let zhi = diZhi[dZhiIdx]
+        return (gan + zhi, gan, zhi)
     }
 
     /// 根据公历日期重算某个农历月序下的月干支
@@ -430,17 +487,31 @@ class LunarCalendarConverter {
         solarYear: Int,
         solarMonth: Int,
         solarDay: Int,
+        solarHour: Int,
+        solarMinute: Int,
         lunarYear: Int,
         lunarMonth: Int
     ) -> (ganZhi: String, gan: String, zhi: String) {
         _ = lunarYear
         _ = lunarMonth
 
-        let monthIndex = solarMonthIndex(year: solarYear, month: solarMonth, day: solarDay)
+        let monthIndex = solarMonthIndex(
+            year: solarYear,
+            month: solarMonth,
+            day: solarDay,
+            hour: solarHour,
+            minute: solarMinute
+        )
         let branchOrder = ["寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"]
         let branch = branchOrder[monthIndex - 1]
 
-        let effectiveYear = solarYearForMonthPillar(year: solarYear, month: solarMonth, day: solarDay)
+        let effectiveYear = solarYearForMonthPillar(
+            year: solarYear,
+            month: solarMonth,
+            day: solarDay,
+            hour: solarHour,
+            minute: solarMinute
+        )
         let yearGanIdx = ((effectiveYear - 4) % 10 + 10) % 10
         let firstMonthGanIdx = ((yearGanIdx % 5) * 2 + 2) % 10
         let ganIdx = (firstMonthGanIdx + monthIndex - 1) % 10

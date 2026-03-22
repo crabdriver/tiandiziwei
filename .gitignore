@@ -1,4 +1,5 @@
 .DS_Store
+.tmp_*
 
 # Xcode user data
 xcuserdata/
