@@ -13,12 +13,12 @@ struct ChartDisplayView: View {
             // 标签切换
             Picker("图表类型", selection: $selectedTab) {
                 Text("紫微盘").tag(0)
-                Text("八字盘").tag(1)
-                Text("详情").tag(2)
+                Text("排盘详情").tag(1)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal)
             .padding(.top, 8)
+            .padding(.bottom, 4)
             
             // 内容
             TabView(selection: $selectedTab) {
@@ -31,22 +31,10 @@ struct ChartDisplayView: View {
                     .tag(0)
                 }
                 
-                // 八字盘面
-                if let baZi = viewModel.baZiChart {
-                    ScrollView {
-                        BaZiChartView(chart: baZi)
-                            .padding()
-                    }
-                    .tag(1)
-                }
-                
                 // 详情
                 if let chart = viewModel.ziWeiChart {
-                    ScrollView {
-                        detailView(chart: chart)
-                            .padding()
-                    }
-                    .tag(2)
+                    detailView(chart: chart)
+                        .tag(1)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
@@ -59,72 +47,67 @@ struct ChartDisplayView: View {
     
     @ViewBuilder
     private func detailView(chart: ZiWeiChart) -> some View {
-        VStack(spacing: 16) {
+        List {
             // 基本信息卡片
-            GroupBox("基本信息") {
-                VStack(alignment: .leading, spacing: 8) {
-                    infoRow("命宫", chart.mingGong)
-                    infoRow("身宫", chart.shenGong)
-                    infoRow("五行局", chart.wuXingJu)
-                    infoRow("命主", chart.mingZhu)
-                    infoRow("身主", chart.shenZhu)
-                    infoRow("来因宫", chart.laiYinGong)
-                    infoRow("流斗", chart.liuDou)
-                    infoRow("当前流年", chart.flowYearGanZhi)
-                    infoRow("当前虚岁", "\(chart.nominalAge)")
-                    infoRow("时间模式", chart.timeInputMode.title)
-                    infoRow(
-                        "阴历日期",
-                        "\(chart.lunarDate.year)年\(chart.lunarDate.isLeapMonth ? "闰" : "")\(chart.lunarDate.month)月\(chart.lunarDate.day)日"
-                    )
-                    infoRow("农历月计数", "\(chart.lunarMonthCount)")
-                    infoRow("钟表时间", chart.clockTime)
-                    infoRow("真太阳时", chart.trueSolarTime)
-                    infoRow("换月", chart.useMonthAdjustment ? "已启用" : "未启用")
-                }
+            Section(header: Text("基本信息")) {
+                infoRow("命宫", chart.mingGong)
+                infoRow("身宫", chart.shenGong)
+                infoRow("五行局", chart.wuXingJu)
+                infoRow("命主", chart.mingZhu)
+                infoRow("身主", chart.shenZhu)
+                infoRow("来因宫", chart.laiYinGong)
+                infoRow("流斗", chart.liuDou)
+                infoRow("当前流年", chart.flowYearGanZhi)
+                infoRow("当前虚岁", "\(chart.nominalAge)")
+                infoRow("时间模式", chart.timeInputMode.title)
+                infoRow(
+                    "阴历日期",
+                    "\(chart.lunarDate.year)年\(chart.lunarDate.isLeapMonth ? "闰" : "")\(chart.lunarDate.month)月\(chart.lunarDate.day)日"
+                )
+                infoRow("农历月计数", "\(chart.lunarMonthCount)")
+                infoRow("钟表时间", chart.clockTime)
+                infoRow("真太阳时", chart.trueSolarTime)
+                infoRow("换月", chart.useMonthAdjustment ? "已启用" : "未启用")
             }
 
-            GroupBox("APK 对照") {
-                VStack(alignment: .leading, spacing: 8) {
-                    infoRow("F 值", viewModel.input.timeInputMode.apkCode)
-                    infoRow("性别码", viewModel.input.apkGenderCode)
-                    infoRow("经度", viewModel.input.apkLongitudeString)
-                    infoRow("Payload", viewModel.input.apkPayloadString)
+            Section(header: Text("APK 对照")) {
+                infoRow("F 值", viewModel.input.timeInputMode.apkCode)
+                infoRow("性别码", viewModel.input.apkGenderCode)
+                infoRow("经度", viewModel.input.apkLongitudeString)
+                infoRow("Payload", viewModel.input.apkPayloadString)
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("完整参数串")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text(viewModel.input.apkFullString())
-                            .font(.system(.caption, design: .monospaced))
-                            .textSelection(.enabled)
-                    }
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("完整参数串")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(viewModel.input.apkFullString())
+                        .font(.system(.caption, design: .monospaced))
+                        .textSelection(.enabled)
                 }
+                .padding(.vertical, 4)
             }
             
             // 四化信息
-            GroupBox("四化飞星") {
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(Array(chart.siHuaInfo.keys.sorted()), id: \.self) { star in
-                        if let hua = chart.siHuaInfo[star] {
-                            HStack {
-                                Text(star)
-                                    .foregroundColor(ZiWeiColors.zhengYaoColor)
-                                    .fontWeight(.bold)
-                                Spacer()
-                                Text(hua)
-                                    .foregroundColor(huaColor(hua))
-                                    .fontWeight(.bold)
-                            }
+            Section(header: Text("四化飞星")) {
+                ForEach(Array(chart.siHuaInfo.keys.sorted()), id: \.self) { star in
+                    if let hua = chart.siHuaInfo[star] {
+                        HStack {
+                            Text(star)
+                                .foregroundColor(ZiWeiColors.zhengYaoColor)
+                                .fontWeight(.bold)
+                            Spacer()
+                            Text(hua)
+                                .foregroundColor(huaColor(hua))
+                                .fontWeight(.bold)
                         }
                     }
                 }
             }
             
             // 十二宫详情
-            GroupBox("十二宫详情") {
+            Section(header: Text("十二宫详情")) {
                 ForEach(chart.palaces, id: \.name) { palace in
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Text(palace.name)
                                 .font(.headline)
@@ -142,14 +125,27 @@ struct ChartDisplayView: View {
                             }
                         }
                         
-                        VStack(alignment: .leading, spacing: 4) {
-                            infoRow("长生", palace.changSheng)
-                            infoRow("岁前", palace.suiQian)
-                            infoRow("将前", palace.jiangQian)
-                            infoRow("博士", palace.boshi)
-                            infoRow("小限", palace.xiaoXian.isEmpty ? "-" : palace.xiaoXian)
+                        HStack {
+                            Text("长生: \(palace.changSheng)")
+                            Spacer()
+                            Text("岁前: \(palace.suiQian)")
                         }
                         .font(.caption)
+                        .foregroundColor(.secondary)
+                        
+                        HStack {
+                            Text("将前: \(palace.jiangQian)")
+                            Spacer()
+                            Text("博士: \(palace.boshi)")
+                        }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                        if !palace.xiaoXian.isEmpty {
+                            Text("小限: \(palace.xiaoXian)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
 
                         if !palace.gongTransforms.isEmpty {
                             transformSection(title: "宫干四化", transforms: palace.gongTransforms)
@@ -182,13 +178,12 @@ struct ChartDisplayView: View {
                                 .cornerRadius(4)
                             }
                         }
-                        
-                        Divider()
                     }
                     .padding(.vertical, 4)
                 }
             }
         }
+        .listStyle(.insetGrouped)
     }
     
     // MARK: - 辅助方法
@@ -253,149 +248,6 @@ struct ChartDisplayView: View {
         case "化科": return "科"
         case "化忌": return "忌"
         default: return ""
-        }
-    }
-}
-
-/// 八字盘面视图
-struct BaZiChartView: View {
-    let chart: BaZiChart
-    
-    var body: some View {
-        VStack(spacing: 16) {
-            // 四柱显示
-            HStack(spacing: 16) {
-                pillarView(title: "年柱", pillar: chart.yearPillar)
-                pillarView(title: "月柱", pillar: chart.monthPillar)
-                pillarView(title: "日柱", pillar: chart.dayPillar, isDayMaster: true)
-                pillarView(title: "时柱", pillar: chart.hourPillar)
-            }
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .cornerRadius(12)
-            
-            // 五行力量
-            GroupBox("五行力量") {
-                HStack(spacing: 12) {
-                    ForEach(["木", "火", "土", "金", "水"], id: \.self) { element in
-                        VStack {
-                            Text(element)
-                                .font(.headline)
-                                .foregroundColor(elementColor(element))
-                            
-                            let strength = chart.wuXingStrength[element] ?? 0
-                            Text("\(strength)")
-                                .font(.caption)
-                                .monospacedDigit()
-                            
-                            Rectangle()
-                                .fill(elementColor(element))
-                                .frame(width: 30, height: CGFloat(strength) / 3)
-                                .cornerRadius(4)
-                        }
-                    }
-                }
-            }
-            
-            // 纳音
-            GroupBox("纳音五行") {
-                VStack(alignment: .leading, spacing: 4) {
-                    naYinRow("年柱", chart.yearPillar)
-                    naYinRow("月柱", chart.monthPillar)
-                    naYinRow("日柱", chart.dayPillar)
-                    naYinRow("时柱", chart.hourPillar)
-                }
-            }
-            
-            // 神煞
-            if !chart.shenSha.isEmpty {
-                GroupBox("神煞") {
-                    FlowLayout(spacing: 6) {
-                        ForEach(chart.shenSha, id: \.self) { sha in
-                            Text(sha)
-                                .font(.caption)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color.purple.opacity(0.1))
-                                .cornerRadius(6)
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func pillarView(title: String, pillar: BaZiPillar, isDayMaster: Bool = false) -> some View {
-        VStack(spacing: 8) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-            
-            // 十神
-            Text(isDayMaster ? "日主" : BaZiEngine.shiShenShort(pillar.shiShen))
-                .font(.caption)
-                .foregroundColor(.secondary)
-            
-            // 天干
-            Text(pillar.tianGan)
-                .font(.system(size: 28, weight: .bold))
-                .foregroundColor(BaZiColors.colorFor(pillar.tianGan))
-            
-            // 地支
-            Text(pillar.diZhi)
-                .font(.system(size: 28, weight: .bold))
-                .foregroundColor(BaZiColors.colorFor(pillar.diZhi))
-            
-            // 藏干
-            VStack(spacing: 2) {
-                ForEach(pillar.hiddenGan, id: \.self) { gan in
-                    HStack(spacing: 2) {
-                        Text(gan)
-                            .font(.caption)
-                            .foregroundColor(BaZiColors.colorFor(gan))
-                        Text(BaZiEngine.shiShenShort(
-                            BaZiEngine.getShiShen(dayGan: chart.dayMaster, otherGan: gan)
-                        ))
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-            
-            // 长生
-            Text(pillar.changSheng)
-                .font(.caption2)
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
-        .background(isDayMaster ? ZiWeiColors.mingGongHighlight : Color.clear)
-        .cornerRadius(8)
-    }
-    
-    @ViewBuilder
-    private func naYinRow(_ title: String, _ pillar: BaZiPillar) -> some View {
-        HStack {
-            Text(title)
-                .foregroundColor(.secondary)
-            Spacer()
-            Text(pillar.ganZhi)
-                .fontWeight(.bold)
-            Text("- \(pillar.naYin)")
-                .foregroundColor(ZiWeiColors.primary)
-        }
-        .font(.subheadline)
-    }
-    
-    private func elementColor(_ element: String) -> Color {
-        switch element {
-        case "木": return BaZiColors.wood
-        case "火": return BaZiColors.fire
-        case "土": return BaZiColors.earth
-        case "金": return BaZiColors.metal
-        case "水": return BaZiColors.water
-        default: return .primary
         }
     }
 }

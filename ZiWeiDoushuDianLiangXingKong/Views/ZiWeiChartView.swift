@@ -12,16 +12,16 @@ struct ZiWeiChartView: View {
     var body: some View {
         GeometryReader { geometry in
             let size = min(geometry.size.width, geometry.size.height)
-            let cellSize = size / 4
+            let cellSize = (size - 1.5) / 4 // 减去间距的宽度
             
             ZStack {
-                // 背景
-                ZiWeiColors.background.opacity(0.3)
+                // 盘面底色
+                Color(UIColor.systemBackground)
                 
-                // 十二宫格
-                VStack(spacing: 0) {
+                // 十二宫格 (通过 spacing 产生 0.5px 的网格线)
+                VStack(spacing: 0.5) {
                     // 第一行: 巳 午 未 申 (索引: 5,6,7,8)
-                    HStack(spacing: 0) {
+                    HStack(spacing: 0.5) {
                         palaceCell(atIndex: positionToIndex(5), cellSize: cellSize)
                         palaceCell(atIndex: positionToIndex(6), cellSize: cellSize)
                         palaceCell(atIndex: positionToIndex(7), cellSize: cellSize)
@@ -29,35 +29,39 @@ struct ZiWeiChartView: View {
                     }
                     
                     // 第二行: 辰 [中央] [中央] 酉
-                    HStack(spacing: 0) {
+                    HStack(spacing: 0.5) {
                         palaceCell(atIndex: positionToIndex(4), cellSize: cellSize)
                         
-                        // 中央区域
+                        // 中央区域上半
                         centerView(cellSize: cellSize)
-                            .frame(width: cellSize * 2, height: cellSize)
+                            .frame(width: cellSize * 2 + 0.5, height: cellSize)
+                            .background(Color(UIColor.systemBackground))
                         
                         palaceCell(atIndex: positionToIndex(9), cellSize: cellSize)
                     }
                     
                     // 第三行: 卯 [中央] [中央] 戌
-                    HStack(spacing: 0) {
+                    HStack(spacing: 0.5) {
                         palaceCell(atIndex: positionToIndex(3), cellSize: cellSize)
                         
                         // 中央区域下半
                         centerViewBottom(cellSize: cellSize)
-                            .frame(width: cellSize * 2, height: cellSize)
+                            .frame(width: cellSize * 2 + 0.5, height: cellSize)
+                            .background(Color(UIColor.systemBackground))
                         
                         palaceCell(atIndex: positionToIndex(10), cellSize: cellSize)
                     }
                     
                     // 第四行: 寅 丑 子 亥 (索引: 2,1,0,11)
-                    HStack(spacing: 0) {
+                    HStack(spacing: 0.5) {
                         palaceCell(atIndex: positionToIndex(2), cellSize: cellSize)
                         palaceCell(atIndex: positionToIndex(1), cellSize: cellSize)
                         palaceCell(atIndex: positionToIndex(0), cellSize: cellSize)
                         palaceCell(atIndex: positionToIndex(11), cellSize: cellSize)
                     }
                 }
+                .background(ZiWeiColors.border) // 网格线颜色
+                .border(ZiWeiColors.border, width: 0.5) // 外边框
             }
             .frame(width: size, height: size)
         }
@@ -80,8 +84,7 @@ struct ZiWeiChartView: View {
             ZStack {
                 // 宫格背景
                 Rectangle()
-                    .fill(isMingGong ? ZiWeiColors.mingGongHighlight : Color.clear)
-                    .border(ZiWeiColors.border, width: 0.5)
+                    .fill(isMingGong ? ZiWeiColors.mingGongHighlight : Color(UIColor.systemBackground))
 
                 if !markers.isEmpty {
                     VStack(alignment: .trailing, spacing: 1) {
@@ -100,10 +103,10 @@ struct ZiWeiChartView: View {
                     // 星曜列表
                     starsView(palace: palace, cellSize: cellSize)
                     
-                    Spacer()
+                    Spacer(minLength: 0)
                     
                     // 底部信息
-                    HStack {
+                    HStack(alignment: .bottom) {
                         // 左下角：岁前/将前/博士
                         VStack(alignment: .leading, spacing: 0) {
                             if !palace.suiQian.isEmpty {
@@ -123,7 +126,7 @@ struct ZiWeiChartView: View {
                             }
                         }
                         
-                        Spacer()
+                        Spacer(minLength: 0)
                         
                         // 右下角：宫名、地支、大限
                         VStack(alignment: .trailing, spacing: 0) {
@@ -154,6 +157,7 @@ struct ZiWeiChartView: View {
                             Text(palace.name)
                                 .font(.system(size: cellSize * 0.08, weight: .bold))
                                 .foregroundColor(ZiWeiColors.gongNameColor)
+                                .padding(.top, 1)
                         }
                     }
                     .padding(.horizontal, 2)
@@ -168,36 +172,59 @@ struct ZiWeiChartView: View {
             }
         } else {
             Rectangle()
-                .fill(Color.clear)
-                .border(ZiWeiColors.border, width: 0.5)
+                .fill(Color(UIColor.systemBackground))
                 .frame(width: cellSize, height: cellSize)
         }
     }
     
-    /// 星曜列表视图
+    /// 星曜列表视图 (优化排版：主星略大，辅星稍小)
     @ViewBuilder
     private func starsView(palace: Palace, cellSize: CGFloat) -> some View {
-        let fontSize = cellSize * 0.075
+        let zhengYaoSize = cellSize * 0.085
+        let otherSize = cellSize * 0.07
         
-        VStack(alignment: .leading, spacing: 0) {
-            ForEach(palace.stars.prefix(8), id: \.name) { star in
-                HStack(spacing: 1) {
-                    Text(star.name)
-                        .font(.system(size: fontSize, weight: .bold))
-                        .foregroundColor(starColor(star))
-                    
-                    if let brightness = star.brightness {
-                        Text(brightness)
-                            .font(.system(size: fontSize * 0.8))
-                            .foregroundColor(.gray)
-                    }
-                    
-                    if let hua = star.siHua {
-                        Text(huaShort(hua))
-                            .font(.system(size: fontSize, weight: .heavy))
-                            .foregroundColor(huaColor(hua))
+        let zhengYao = palace.stars.filter { $0.category == .zhengYao }
+        let others = palace.stars.filter { $0.category != .zhengYao }
+        
+        HStack(alignment: .top, spacing: 4) {
+            // 左列：主星
+            if !zhengYao.isEmpty {
+                VStack(alignment: .leading, spacing: 1) {
+                    ForEach(zhengYao, id: \.name) { star in
+                        starRow(star: star, fontSize: zhengYaoSize, isZhengYao: true)
                     }
                 }
+            }
+            
+            // 右列：辅星/煞星/杂曜 (最多显示5个防止溢出)
+            if !others.isEmpty {
+                VStack(alignment: .leading, spacing: 1) {
+                    ForEach(others.prefix(5), id: \.name) { star in
+                        starRow(star: star, fontSize: otherSize, isZhengYao: false)
+                    }
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func starRow(star: Star, fontSize: CGFloat, isZhengYao: Bool) -> some View {
+        HStack(spacing: 1) {
+            Text(star.name)
+                .font(.system(size: fontSize, weight: isZhengYao ? .bold : .medium))
+                .foregroundColor(starColor(star))
+            
+            if let brightness = star.brightness {
+                Text(brightness)
+                    .font(.system(size: fontSize * 0.8))
+                    .foregroundColor(.gray)
+            }
+            
+            if let hua = star.siHua {
+                Text(huaShort(hua))
+                    .font(.system(size: fontSize, weight: .heavy))
+                    .foregroundColor(huaColor(hua))
+                    .padding(.leading, 1)
             }
         }
     }
@@ -205,7 +232,7 @@ struct ZiWeiChartView: View {
     /// 中央区域上半部分
     @ViewBuilder
     private func centerView(cellSize: CGFloat) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 6) {
             // 标题
             Text("紫微斗数-点亮星空版")
                 .font(.system(size: cellSize * 0.14, weight: .bold, design: .serif))
@@ -213,16 +240,28 @@ struct ZiWeiChartView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.45)
             
-            // 信息行
-            HStack(spacing: 8) {
-                Text(chart.lunarDate.yearGan + chart.lunarDate.yearZhi)
-                    .foregroundColor(BaZiColors.colorFor(chart.lunarDate.yearGan))
-                Text(chart.lunarDate.monthGan + chart.lunarDate.monthZhi)
-                    .foregroundColor(BaZiColors.colorFor(chart.lunarDate.monthGan))
-                Text(chart.lunarDate.dayGan + chart.lunarDate.dayZhi)
-                    .foregroundColor(BaZiColors.colorFor(chart.lunarDate.dayGan))
-                Text(chart.lunarDate.hourGan + chart.lunarDate.hourZhi)
-                    .foregroundColor(BaZiColors.colorFor(chart.lunarDate.hourGan))
+            // 信息行 (四柱)
+            HStack(spacing: 12) {
+                VStack(spacing: 2) {
+                    Text("年柱").font(.system(size: cellSize * 0.05)).foregroundColor(.secondary)
+                    Text(chart.lunarDate.yearGan + chart.lunarDate.yearZhi)
+                        .foregroundColor(ZiWeiColors.textDark)
+                }
+                VStack(spacing: 2) {
+                    Text("月柱").font(.system(size: cellSize * 0.05)).foregroundColor(.secondary)
+                    Text(chart.lunarDate.monthGan + chart.lunarDate.monthZhi)
+                        .foregroundColor(ZiWeiColors.textDark)
+                }
+                VStack(spacing: 2) {
+                    Text("日柱").font(.system(size: cellSize * 0.05)).foregroundColor(.secondary)
+                    Text(chart.lunarDate.dayGan + chart.lunarDate.dayZhi)
+                        .foregroundColor(ZiWeiColors.textDark)
+                }
+                VStack(spacing: 2) {
+                    Text("时柱").font(.system(size: cellSize * 0.05)).foregroundColor(.secondary)
+                    Text(chart.lunarDate.hourGan + chart.lunarDate.hourZhi)
+                        .foregroundColor(ZiWeiColors.textDark)
+                }
             }
             .font(.system(size: cellSize * 0.1, weight: .bold))
         }
@@ -231,34 +270,41 @@ struct ZiWeiChartView: View {
     /// 中央区域下半部分
     @ViewBuilder
     private func centerViewBottom(cellSize: CGFloat) -> some View {
-        VStack(spacing: 3) {
-            HStack {
-                Text("命主:\(chart.mingZhu)")
-                Text("身主:\(chart.shenZhu)")
-                Text("身宫:\(chart.shenGong)")
+        VStack(spacing: 4) {
+            HStack(spacing: 12) {
+                Text("命主: \(chart.mingZhu)")
+                Text("身主: \(chart.shenZhu)")
+                Text("身宫: \(chart.shenGong)")
             }
-            .font(.system(size: cellSize * 0.08))
+            .font(.system(size: cellSize * 0.08, weight: .medium))
             .foregroundColor(ZiWeiColors.textDark)
             
             Text(chart.wuXingJu)
-                .font(.system(size: cellSize * 0.08))
-                .foregroundColor(ZiWeiColors.textDark)
+                .font(.system(size: cellSize * 0.085, weight: .bold))
+                .foregroundColor(ZiWeiColors.primary)
+                .padding(.vertical, 2)
 
-            Text("流年:\(chart.flowYearGanZhi)  虚岁:\(chart.nominalAge)")
-                .font(.system(size: cellSize * 0.075))
-                .foregroundColor(ZiWeiColors.textDark)
+            HStack(spacing: 12) {
+                Text("流年: \(chart.flowYearGanZhi)")
+                Text("虚岁: \(chart.nominalAge)")
+            }
+            .font(.system(size: cellSize * 0.075))
+            .foregroundColor(ZiWeiColors.textDark)
 
-            Text("来因:\(chart.laiYinGong)  流斗:\(chart.liuDou)")
-                .font(.system(size: cellSize * 0.075))
-                .foregroundColor(ZiWeiColors.textDark)
+            HStack(spacing: 12) {
+                Text("来因: \(chart.laiYinGong)")
+                Text("流斗: \(chart.liuDou)")
+            }
+            .font(.system(size: cellSize * 0.075))
+            .foregroundColor(ZiWeiColors.textDark)
             
-            Text("钟表:\(chart.clockTime)")
-                .font(.system(size: cellSize * 0.065))
-                .foregroundColor(.secondary)
-
-            Text(chart.timeInputMode == .trueSolarTime ? "真太阳输入:\(chart.trueSolarTime)" : "真太阳:\(chart.trueSolarTime)")
-                .font(.system(size: cellSize * 0.065))
-                .foregroundColor(.secondary)
+            VStack(spacing: 2) {
+                Text("钟表: \(chart.clockTime)")
+                Text(chart.timeInputMode == .trueSolarTime ? "真太阳输入: \(chart.trueSolarTime)" : "真太阳: \(chart.trueSolarTime)")
+            }
+            .font(.system(size: cellSize * 0.065))
+            .foregroundColor(.secondary)
+            .padding(.top, 2)
         }
     }
     
