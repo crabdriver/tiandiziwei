@@ -1,5 +1,5 @@
 // ChartDisplayView.swift - 排盘结果显示页
-// 紫微斗数-点亮星空版 iOS 版
+// 看盘啦 · iOS 紫微斗数排盘
 
 import SwiftUI
 
@@ -7,18 +7,40 @@ import SwiftUI
 struct ChartDisplayView: View {
     @ObservedObject var viewModel: ChartViewModel
     @State private var selectedTab = 0
+    @State private var showApkDebug = false
     
     var body: some View {
         VStack(spacing: 0) {
-            // 标签切换
-            Picker("图表类型", selection: $selectedTab) {
-                Text("紫微盘").tag(0)
-                Text("排盘详情").tag(1)
+            // 标签切换（胶囊分段，比系统默认条更贴近现代排盘站点的切换）
+            HStack(spacing: 0) {
+                tabChip(title: "紫微盘", systemImage: "circle.grid.3x3", index: 0)
+                tabChip(title: "排盘详情", systemImage: "list.bullet.rectangle", index: 1)
             }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 4)
+            .padding(5)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(.ultraThinMaterial)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                ZiWeiColors.border.opacity(0.5),
+                                ZiWeiColors.gold.opacity(0.35)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1
+                    )
+            )
+            .shadow(color: Color.black.opacity(0.06), radius: 10, y: 4)
+            .padding(.horizontal, 16)
+            .padding(.top, 10)
+            .padding(.bottom, 8)
+            .accessibilityLabel("排盘视图切换")
+            .accessibilityHint("在紫微命盘与文字详情之间切换")
             
             // 内容
             TabView(selection: $selectedTab) {
@@ -26,6 +48,8 @@ struct ChartDisplayView: View {
                 if let chart = viewModel.ziWeiChart {
                     ScrollView {
                         ZiWeiChartView(chart: chart)
+                            .padding(10)
+                            .shadow(color: Color.black.opacity(0.07), radius: 16, y: 8)
                             .padding(8)
                     }
                     .tag(0)
@@ -39,8 +63,59 @@ struct ChartDisplayView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
+        .background(ZiWeiColors.screenBackdropGradient.ignoresSafeArea())
         .navigationTitle(viewModel.input.name.isEmpty ? "排盘结果" : viewModel.input.name)
         .navigationBarTitleDisplayMode(.inline)
+        .ziWeiNavigationChrome()
+    }
+    
+    private func detailSectionHeader(_ title: String) -> some View {
+        Text(title)
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(ZiWeiColors.textMuted)
+            .textCase(nil)
+    }
+    
+    private func tabChip(title: String, systemImage: String, index: Int) -> some View {
+        Button {
+            withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+                selectedTab = index
+            }
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: systemImage)
+                    .font(.subheadline.weight(.semibold))
+                    .symbolRenderingMode(.hierarchical)
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 11)
+            .background(
+                Group {
+                    if selectedTab == index {
+                        RoundedRectangle(cornerRadius: 11, style: .continuous)
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        ZiWeiColors.cardSurface,
+                                        ZiWeiColors.cardSurface.opacity(0.92)
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .shadow(color: ZiWeiColors.primary.opacity(0.12), radius: 6, y: 2)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                                    .stroke(ZiWeiColors.border.opacity(0.45), lineWidth: 0.5)
+                            )
+                    }
+                }
+            )
+            .foregroundStyle(selectedTab == index ? ZiWeiColors.textDark : ZiWeiColors.textMuted)
+        }
+        .buttonStyle(.plain)
     }
     
     // MARK: - 详情视图
@@ -49,7 +124,7 @@ struct ChartDisplayView: View {
     private func detailView(chart: ZiWeiChart) -> some View {
         List {
             // 基本信息卡片
-            Section(header: Text("基本信息")) {
+            Section(header: detailSectionHeader("基本信息")) {
                 infoRow("命宫", chart.mingGong)
                 infoRow("身宫", chart.shenGong)
                 infoRow("五行局", chart.wuXingJu)
@@ -70,25 +145,31 @@ struct ChartDisplayView: View {
                 infoRow("换月", chart.useMonthAdjustment ? "已启用" : "未启用")
             }
 
-            Section(header: Text("APK 对照")) {
-                infoRow("F 值", viewModel.input.timeInputMode.apkCode)
-                infoRow("性别码", viewModel.input.apkGenderCode)
-                infoRow("经度", viewModel.input.apkLongitudeString)
-                infoRow("Payload", viewModel.input.apkPayloadString)
+            Section {
+                DisclosureGroup(isExpanded: $showApkDebug) {
+                    infoRow("F 值", viewModel.input.timeInputMode.apkCode)
+                    infoRow("性别码", viewModel.input.apkGenderCode)
+                    infoRow("经度", viewModel.input.apkLongitudeString)
+                    infoRow("Payload", viewModel.input.apkPayloadString)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("完整参数串")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text(viewModel.input.apkFullString())
-                        .font(.system(.caption, design: .monospaced))
-                        .textSelection(.enabled)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("完整参数串")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text(viewModel.input.apkFullString())
+                            .font(.system(.caption, design: .monospaced))
+                            .textSelection(.enabled)
+                    }
+                    .padding(.vertical, 4)
+                } label: {
+                    Text("APK 对照（开发者）")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(ZiWeiColors.textMuted)
                 }
-                .padding(.vertical, 4)
             }
             
             // 四化信息
-            Section(header: Text("四化飞星")) {
+            Section(header: detailSectionHeader("四化飞星")) {
                 ForEach(Array(chart.siHuaInfo.keys.sorted()), id: \.self) { star in
                     if let hua = chart.siHuaInfo[star] {
                         HStack {
@@ -97,7 +178,7 @@ struct ChartDisplayView: View {
                                 .fontWeight(.bold)
                             Spacer()
                             Text(hua)
-                                .foregroundColor(huaColor(hua))
+                                .foregroundColor(ChartPalette.huaColor(hua))
                                 .fontWeight(.bold)
                         }
                     }
@@ -105,85 +186,15 @@ struct ChartDisplayView: View {
             }
             
             // 十二宫详情
-            Section(header: Text("十二宫详情")) {
+            Section(header: detailSectionHeader("十二宫详情")) {
                 ForEach(chart.palaces, id: \.name) { palace in
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text(palace.name)
-                                .font(.headline)
-                                .foregroundColor(ZiWeiColors.gongNameColor)
-                            
-                            Text("(\(palace.tianGan)\(palace.position))")
-                                .foregroundColor(.secondary)
-                            
-                            Spacer()
-                            
-                            if !palace.daXian.isEmpty {
-                                Text("大限: \(palace.daXian)")
-                                    .font(.caption)
-                                    .foregroundColor(ZiWeiColors.daXianColor)
-                            }
-                        }
-                        
-                        HStack {
-                            Text("长生: \(palace.changSheng)")
-                            Spacer()
-                            Text("岁前: \(palace.suiQian)")
-                        }
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        
-                        HStack {
-                            Text("将前: \(palace.jiangQian)")
-                            Spacer()
-                            Text("博士: \(palace.boshi)")
-                        }
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-
-                        if !palace.xiaoXian.isEmpty {
-                            Text("小限: \(palace.xiaoXian)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-
-                        if !palace.gongTransforms.isEmpty {
-                            transformSection(title: "宫干四化", transforms: palace.gongTransforms)
-                        }
-
-                        if !palace.chongHua.isEmpty {
-                            transformSection(title: "冲化", transforms: palace.chongHua)
-                        }
-
-                        if !palace.ziHua.isEmpty {
-                            transformSection(title: "自化", transforms: palace.ziHua)
-                        }
-
-                        // 星曜
-                        FlowLayout(spacing: 6) {
-                            ForEach(palace.stars, id: \.name) { star in
-                                HStack(spacing: 2) {
-                                    Text(star.name)
-                                        .font(.caption)
-                                        .foregroundColor(starColor(star))
-                                    if let hua = star.siHua {
-                                        Text(huaShortText(hua))
-                                            .font(.caption2)
-                                            .foregroundColor(huaColor(hua))
-                                    }
-                                }
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(4)
-                            }
-                        }
-                    }
-                    .padding(.vertical, 4)
+                    PalaceDetailContent(palace: palace)
                 }
             }
         }
         .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(ZiWeiColors.screenBackdropGradient)
     }
     
     // MARK: - 辅助方法
@@ -199,57 +210,6 @@ struct ChartDisplayView: View {
         }
     }
 
-    @ViewBuilder
-    private func transformSection(title: String, transforms: [PalaceTransform]) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            ForEach(Array(transforms.enumerated()), id: \.offset) { _, transform in
-                HStack {
-                    Text("\(transform.star)\(huaShortText(transform.hua))")
-                        .foregroundColor(huaColor(transform.hua))
-                    Spacer()
-                    Text("\(transform.targetPalace)-\(transform.targetPosition)")
-                        .foregroundColor(.secondary)
-                    Text("\(transform.strength)%")
-                        .foregroundColor(.secondary)
-                }
-                .font(.caption)
-            }
-        }
-    }
-    
-    private func starColor(_ star: Star) -> Color {
-        switch star.category {
-        case .zhengYao: return ZiWeiColors.zhengYaoColor
-        case .fuXing: return ZiWeiColors.fuXingColor
-        case .shaXing: return ZiWeiColors.shaXingColor
-        case .zaYao: return ZiWeiColors.zaYaoColor
-        case .liuNian: return ZiWeiColors.daXianColor
-        }
-    }
-    
-    private func huaColor(_ hua: String) -> Color {
-        switch hua {
-        case "化禄": return ZiWeiColors.huaLuColor
-        case "化权": return ZiWeiColors.huaQuanColor
-        case "化科": return ZiWeiColors.huaKeColor
-        case "化忌": return ZiWeiColors.huaJiColor
-        default: return .primary
-        }
-    }
-    
-    private func huaShortText(_ hua: String) -> String {
-        switch hua {
-        case "化禄": return "禄"
-        case "化权": return "权"
-        case "化科": return "科"
-        case "化忌": return "忌"
-        default: return ""
-        }
-    }
 }
 
 /// FlowLayout - 流式布局

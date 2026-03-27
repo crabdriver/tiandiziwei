@@ -1,5 +1,5 @@
 // ZiWeiDoushuDianLiangXingKongApp.swift - 应用入口
-// 紫微斗数-点亮星空版 iOS 版
+// 看盘啦 · iOS 紫微斗数排盘
 
 import SwiftUI
 

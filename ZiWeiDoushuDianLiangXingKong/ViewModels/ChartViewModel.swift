@@ -1,5 +1,5 @@
 // ChartViewModel.swift - 排盘视图模型
-// 紫微斗数-点亮星空版 iOS 版
+// 看盘啦 · iOS 紫微斗数排盘
 
 import Foundation
 import SwiftUI
@@ -116,21 +116,11 @@ struct ChartInput: Equatable {
 class ChartViewModel: ObservableObject {
     @Published var input = ChartInput()
     @Published var ziWeiChart: ZiWeiChart?
-    @Published var baZiChart: BaZiChart?
-    @Published var isChartGenerated = false
-    @Published var currentTab: ChartTab = .ziWei
-    
-    enum ChartTab {
-        case ziWei   // 紫微盘
-        case baZi    // 八字盘
-        case tools   // 工具集
-    }
     
     /// 生成排盘
     func generateChart() {
         normalizeInput()
 
-        // 1. 紫微排盘
         ziWeiChart = ZiWeiEngine.generateChart(
             year: input.year,
             month: input.month,
@@ -143,16 +133,6 @@ class ChartViewModel: ObservableObject {
             useMonthAdjustment: input.useMonthAdjustment,
             longitude: input.longitude
         )
-        
-        // 2. 八字排盘
-        if let chart = ziWeiChart {
-            baZiChart = BaZiEngine.generateChart(
-                lunar: chart.lunarDate,
-                isMale: input.isMale
-            )
-        }
-        
-        isChartGenerated = true
     }
     
     /// 获取当前时间参数

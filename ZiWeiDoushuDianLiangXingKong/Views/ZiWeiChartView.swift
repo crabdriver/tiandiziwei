@@ -1,22 +1,27 @@
 // ZiWeiChartView.swift - 紫微盘面视图
-// 紫微斗数-点亮星空版 iOS 版 - 使用 SwiftUI Canvas 绘制
+// 看盘啦 · iOS 紫微斗数排盘（SwiftUI Canvas）
 
 import SwiftUI
 
 /// 紫微排盘盘面视图
 struct ZiWeiChartView: View {
     let chart: ZiWeiChart
-    @State private var selectedPalace: Int? = nil
-    @State private var showDetail = false
-    
+
+    /// 用于 `.sheet(item:)` 的轻量标识
+    private struct PresentedPalace: Identifiable {
+        let id: Int
+    }
+
+    @State private var presentedPalaceSheet: PresentedPalace?
+
     var body: some View {
         GeometryReader { geometry in
             let size = min(geometry.size.width, geometry.size.height)
             let cellSize = (size - 1.5) / 4 // 减去间距的宽度
             
             ZStack {
-                // 盘面底色
-                Color(UIColor.systemBackground)
+                // 盘面底色（宣纸感，与 iztro 类排盘展示常见的「纸面」一致）
+                ZiWeiColors.chartPaper
                 
                 // 十二宫格 (通过 spacing 产生 0.5px 的网格线)
                 VStack(spacing: 0.5) {
@@ -35,7 +40,7 @@ struct ZiWeiChartView: View {
                         // 中央区域上半
                         centerView(cellSize: cellSize)
                             .frame(width: cellSize * 2 + 0.5, height: cellSize)
-                            .background(Color(UIColor.systemBackground))
+                            .background(ZiWeiColors.chartPaper)
                         
                         palaceCell(atIndex: positionToIndex(9), cellSize: cellSize)
                     }
@@ -47,7 +52,7 @@ struct ZiWeiChartView: View {
                         // 中央区域下半
                         centerViewBottom(cellSize: cellSize)
                             .frame(width: cellSize * 2 + 0.5, height: cellSize)
-                            .background(Color(UIColor.systemBackground))
+                            .background(ZiWeiColors.chartPaper)
                         
                         palaceCell(atIndex: positionToIndex(10), cellSize: cellSize)
                     }
@@ -61,13 +66,36 @@ struct ZiWeiChartView: View {
                     }
                 }
                 .background(ZiWeiColors.border) // 网格线颜色
-                .border(ZiWeiColors.border, width: 0.5) // 外边框
+                .overlay(
+                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                        .stroke(ZiWeiColors.chartFrame.opacity(0.9), lineWidth: 1)
+                )
             }
             .frame(width: size, height: size)
         }
         .aspectRatio(1, contentMode: .fit)
+        .sheet(item: $presentedPalaceSheet) { item in
+            NavigationStack {
+                ScrollView {
+                    if item.id < chart.palaces.count {
+                        PalaceDetailContent(palace: chart.palaces[item.id])
+                            .padding(16)
+                    }
+                }
+                .background(ZiWeiColors.screenBackdropGradient)
+                .navigationTitle(item.id < chart.palaces.count ? chart.palaces[item.id].name : "宫位")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("关闭") {
+                            presentedPalaceSheet = nil
+                        }
+                    }
+                }
+            }
+        }
     }
-    
+
     /// 将地支索引转换为宫的索引
     private func positionToIndex(_ zhiIdx: Int) -> Int? {
         chart.palaces.firstIndex(where: { $0.position == diZhi[zhiIdx] })
@@ -84,7 +112,7 @@ struct ZiWeiChartView: View {
             ZStack {
                 // 宫格背景
                 Rectangle()
-                    .fill(isMingGong ? ZiWeiColors.mingGongHighlight : Color(UIColor.systemBackground))
+                    .fill(isMingGong ? ZiWeiColors.mingGongHighlight : ZiWeiColors.chartPaper)
 
                 if !markers.isEmpty {
                     VStack(alignment: .trailing, spacing: 1) {
@@ -166,13 +194,15 @@ struct ZiWeiChartView: View {
                 .padding(2)
             }
             .frame(width: cellSize, height: cellSize)
+            .accessibilityLabel("\(palace.name)，\(palace.tianGan)\(palace.position)")
+            .accessibilityHint("打开该宫星曜与四化详情")
+            .accessibilityAddTraits(.isButton)
             .onTapGesture {
-                selectedPalace = idx
-                showDetail = true
+                presentedPalaceSheet = PresentedPalace(id: idx)
             }
         } else {
             Rectangle()
-                .fill(Color(UIColor.systemBackground))
+                .fill(ZiWeiColors.chartPaper)
                 .frame(width: cellSize, height: cellSize)
         }
     }
@@ -234,7 +264,7 @@ struct ZiWeiChartView: View {
     private func centerView(cellSize: CGFloat) -> some View {
         VStack(spacing: 6) {
             // 标题
-            Text("紫微斗数-点亮星空版")
+            Text("看盘啦")
                 .font(.system(size: cellSize * 0.14, weight: .bold, design: .serif))
                 .foregroundColor(ZiWeiColors.textDark)
                 .lineLimit(1)

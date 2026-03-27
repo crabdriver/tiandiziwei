@@ -19,7 +19,11 @@
 		AE12ECC948186A9C6A221635 /* FlowYearStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CADC986ADD6745EF58277E /* FlowYearStars.swift */; };
 		BE9D8EA2B873C72046E3962B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 489D3B3C60584BC7F3A62800 /* Assets.xcassets */; };
 		DF043E5D58935DA1C5375372 /* StarBrightness.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A48768C1725AF0DAD03284 /* StarBrightness.swift */; };
-		E79D859B5A08BEFF1C498304 /* BaZiEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D974A5FC8CF033DB8A492800 /* BaZiEngine.swift */; };
+		6A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift */; };
+		A1B2C3D4E5F60718291A1B1F /* ChartInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718291A1B1E /* ChartInputTests.swift */; };
+		D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1 /* LunarCalendarConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D2 /* LunarCalendarConverterTests.swift */; };
+		D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2 /* TrueSolarTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D3 /* TrueSolarTimeTests.swift */; };
+		D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3 /* ZiWeiEnginePureHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D4 /* ZiWeiEnginePureHelpersTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,10 +37,15 @@
 		89CADC986ADD6745EF58277E /* FlowYearStars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowYearStars.swift; sourceTree = "<group>"; };
 		9D9764C459C42F6761EC33E6 /* ZiWeiChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiChartView.swift; sourceTree = "<group>"; };
 		A3A48768C1725AF0DAD03284 /* StarBrightness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarBrightness.swift; sourceTree = "<group>"; };
-		D974A5FC8CF033DB8A492800 /* BaZiEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaZiEngine.swift; sourceTree = "<group>"; };
+		7A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalaceDetailContent.swift; sourceTree = "<group>"; };
 		EECAA68FD75B62267060F315 /* LunarCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunarCalendar.swift; sourceTree = "<group>"; };
 		F0442E41522B24F24B901BB7 /* ColorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
 		F5C45F812E6232E903D9AA5C /* ZiWeiEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiEngine.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718291A1B1D /* ZiWeiDoushuDianLiangXingKongTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZiWeiDoushuDianLiangXingKongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F60718291A1B1E /* ChartInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartInputTests.swift; sourceTree = "<group>"; };
+		D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D2 /* LunarCalendarConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunarCalendarConverterTests.swift; sourceTree = "<group>"; };
+		D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D3 /* TrueSolarTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueSolarTimeTests.swift; sourceTree = "<group>"; };
+		D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D4 /* ZiWeiEnginePureHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiEnginePureHelpersTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -61,6 +70,7 @@
 			children = (
 				84D2C6740E4D06BE31B1A32E /* ChartDisplayView.swift */,
 				540A7A9E356C69A3D02B370D /* InputView.swift */,
+				7A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift */,
 				9D9764C459C42F6761EC33E6 /* ZiWeiChartView.swift */,
 			);
 			path = Views;
@@ -69,7 +79,6 @@
 		58108EC0E458AF242D92C7CD /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				D974A5FC8CF033DB8A492800 /* BaZiEngine.swift */,
 				89CADC986ADD6745EF58277E /* FlowYearStars.swift */,
 				EECAA68FD75B62267060F315 /* LunarCalendar.swift */,
 				A3A48768C1725AF0DAD03284 /* StarBrightness.swift */,
@@ -87,10 +96,22 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		A1B2C3D4E5F60718291A1B2E /* ZiWeiDoushuDianLiangXingKongTests */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F60718291A1B1E /* ChartInputTests.swift */,
+				D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D2 /* LunarCalendarConverterTests.swift */,
+				D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D3 /* TrueSolarTimeTests.swift */,
+				D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D4 /* ZiWeiEnginePureHelpersTests.swift */,
+			);
+			path = ZiWeiDoushuDianLiangXingKongTests;
+			sourceTree = "<group>";
+		};
 		B31362BC9E4D35FCAD15B015 = {
 			isa = PBXGroup;
 			children = (
 				F9BC042AF137EE20003E9208 /* ZiWeiDoushuDianLiangXingKong */,
+				A1B2C3D4E5F60718291A1B2E /* ZiWeiDoushuDianLiangXingKongTests */,
 				C035CE5104BE5CA2527AC991 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -99,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				6621CDDAD3AD4E9F11B9EF9F /* ZiWeiDoushuDianLiangXingKong.app */,
+				A1B2C3D4E5F60718291A1B1D /* ZiWeiDoushuDianLiangXingKongTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -137,7 +159,44 @@
 			productReference = 6621CDDAD3AD4E9F11B9EF9F /* ZiWeiDoushuDianLiangXingKong.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A1B2C3D4E5F60718291A1B1C /* ZiWeiDoushuDianLiangXingKongTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B2C3D4E5F60718291A1B3B /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKongTests" */;
+			buildPhases = (
+				A1B2C3D4E5F60718291A1B2A /* Sources */,
+				A1B2C3D4E5F60718291A1B2B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1B2C3D4E5F60718291A1B2D /* PBXTargetDependency */,
+			);
+			name = ZiWeiDoushuDianLiangXingKongTests;
+			packageProductDependencies = (
+			);
+			productName = ZiWeiDoushuDianLiangXingKongTests;
+			productReference = A1B2C3D4E5F60718291A1B1D /* ZiWeiDoushuDianLiangXingKongTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		A1B2C3D4E5F60718291A1B2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FBF2E2C651C46A43D1425C8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E990CADF18D556B5BCC1E36A;
+			remoteInfo = ZiWeiDoushuDianLiangXingKong;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		A1B2C3D4E5F60718291A1B2D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E990CADF18D556B5BCC1E36A /* ZiWeiDoushuDianLiangXingKong */;
+			targetProxy = A1B2C3D4E5F60718291A1B2C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
 		1FBF2E2C651C46A43D1425C8 /* Project object */ = {
@@ -146,6 +205,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					A1B2C3D4E5F60718291A1B1C = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = E990CADF18D556B5BCC1E36A;
+					};
 					E990CADF18D556B5BCC1E36A = {
 						ProvisioningStyle = Automatic;
 					};
@@ -166,6 +229,7 @@
 			projectRoot = "";
 			targets = (
 				E990CADF18D556B5BCC1E36A /* ZiWeiDoushuDianLiangXingKong */,
+				A1B2C3D4E5F60718291A1B1C /* ZiWeiDoushuDianLiangXingKongTests */,
 			);
 		};
 /* End PBXProject section */
@@ -181,17 +245,38 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		A1B2C3D4E5F60718291A1B2B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		A1B2C3D4E5F60718291A1B2A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B2C3D4E5F60718291A1B1F /* ChartInputTests.swift in Sources */,
+				D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1 /* LunarCalendarConverterTests.swift in Sources */,
+				D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2 /* TrueSolarTimeTests.swift in Sources */,
+				D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3 /* ZiWeiEnginePureHelpersTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3AC4BB7F633729AE2AA347EE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E79D859B5A08BEFF1C498304 /* BaZiEngine.swift in Sources */,
 				0BBBF525AFE087C665D2E3F3 /* ChartDisplayView.swift in Sources */,
 				6477AB9E157D97552448FADD /* ChartViewModel.swift in Sources */,
 				9C3F8B3D028B8251FD1C628A /* ColorTheme.swift in Sources */,
 				AE12ECC948186A9C6A221635 /* FlowYearStars.swift in Sources */,
 				173962DD66C4A1751AD3E3C5 /* InputView.swift in Sources */,
+				6A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift in Sources */,
 				1C0BBC2EDAA72E2B0ED22206 /* LunarCalendar.swift in Sources */,
 				DF043E5D58935DA1C5375372 /* StarBrightness.swift in Sources */,
 				356CF9846B7125E6EEA63BA4 /* TrueSolarTime.swift in Sources */,
@@ -255,7 +340,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -312,7 +397,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -331,7 +416,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "紫微斗数-点亮星空版";
+				INFOPLIST_KEY_CFBundleDisplayName = "看盘啦";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -355,7 +440,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "紫微斗数-点亮星空版";
+				INFOPLIST_KEY_CFBundleDisplayName = "看盘啦";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -370,6 +455,56 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
+		};
+		A1B2C3D4E5F60718291A1B2F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZiWeiDoushuDianLiangXingKong.app/ZiWeiDoushuDianLiangXingKong";
+			};
+			name = Debug;
+		};
+		A1B2C3D4E5F60718291A1B3C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZiWeiDoushuDianLiangXingKong.app/ZiWeiDoushuDianLiangXingKong";
+			};
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -388,6 +523,15 @@
 			buildConfigurations = (
 				0CB71993C5EC004B0A74599F /* Debug */,
 				0F34E50FF36049A9E9D166F9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A1B2C3D4E5F60718291A1B3B /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKongTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3D4E5F60718291A1B2F /* Debug */,
+				A1B2C3D4E5F60718291A1B3C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
