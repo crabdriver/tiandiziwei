@@ -1,5 +1,5 @@
 // FlowYearStars.swift - 流年星系 + 小限计算
-// 紫微斗数-点亮星空版 iOS 版
+// 看盘啦 · iOS 紫微斗数排盘
 // 对应 Android 版 zwpview.java 中的流年星安排逻辑
 
 import Foundation

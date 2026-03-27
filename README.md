@@ -1,8 +1,8 @@
-# 紫微斗数-点亮星空版
+# 看盘啦
 
-`紫微斗数-点亮星空版` 是一个基于 SwiftUI 的 iOS 紫微斗数排盘项目。
+**看盘啦** 是基于 SwiftUI 的 iOS 紫微斗数排盘应用（主屏与系统显示名为「看盘啦」）。
 
-本项目的紫微斗数逻辑继承于点亮星空老师，当前仓库重点在于让 iOS 版的核心排盘结果尽量对齐既有 Android APK 的实际行为。
+排盘逻辑继承「点亮星空」体系，并与既有 Android APK 的实际行为尽量对齐，便于对照样本做校准与回归。
 
 ## 项目结构
 
@@ -11,10 +11,20 @@
   - `Models/LunarCalendar.swift`: 农历转换、干支计算、节气判定
   - `Models/FlowYearStars.swift`: 流年星系与大限宫位计算
   - `ViewModels/ChartViewModel.swift`: 输入处理与排盘调度
+  - `Utils/ColorTheme.swift`: 界面配色、渐变、`ChartPalette`（星曜/四化展示色）
+  - `Views/InputView.swift`: 生辰输入页
   - `Views/ZiWeiChartView.swift`: 命盘棋盘式渲染
-  - `Views/ChartDisplayView.swift`: 排盘信息展示
+  - `Views/PalaceDetailContent.swift`: 单宫详情（盘面点击与「排盘详情」列表复用）
+  - `Views/ChartDisplayView.swift`: 排盘结果（命盘 / 详情切换）
+- `ZiWeiDoushuDianLiangXingKongTests/`: 单元测试（解析层与纯函数，见下「单元测试」）
 - `ZiWeiDoushuDianLiangXingKong.xcodeproj/`: Xcode 工程
-- `project.yml`: 项目配置
+- `project.yml`: **Xcode 工程唯一配置源**（XcodeGen）；详见 `docs/工程配置说明.md`
+- `scripts/regenerate-xcode-project.sh`: 在 macOS 上根据 `project.yml` 重新生成 `project.pbxproj`
+- `docs/项目现状与规划.md`: 项目现状、方向与近期进展
+- `docs/工程配置说明.md`: XcodeGen 单一配置源与生成流程
+- `.github/workflows/ios-test.yml`: GitHub Actions，在 macOS 上自动跑单元测试
+
+界面风格（暖纸底、夜空英雄区、朱砂宫名、结果页材质分段等）集中在 `Utils/ColorTheme.swift` 与各 `Views`，**不涉及排盘数据计算**。
 
 ## 已对齐的排盘逻辑
 
@@ -62,7 +72,7 @@
 ## 开发环境
 
 - Xcode
-- iOS 16.0+
+- iOS 17.0+（使用 SwiftUI `onChange` 双参数形式等 API）
 - Swift 5.9
 
 ## 运行方式
@@ -71,8 +81,27 @@
 2. 选择模拟器或真机
 3. 运行 `ZiWeiDoushuDianLiangXingKong` target
 
+## 单元测试
+
+工程内包含 `ZiWeiDoushuDianLiangXingKongTests` target。在 Xcode 中选择该 scheme 或按 `⌘U` 运行测试。
+
+| 测试文件 | 内容 |
+|----------|------|
+| `ChartInputTests.swift` | `ChartInput` / `fromApkString`、多模式参数串往返 |
+| `LunarCalendarConverterTests.swift` | 时辰索引、闰月与月天数等 |
+| `TrueSolarTimeTests.swift` | 均时差、标准经度下真太阳时 |
+| `ZiWeiEnginePureHelpersTests.swift` | 四化表、地支运算、命宫/身宫公式等（**不调用** `generateChart` 整盘） |
+
+## CI（自动测试）
+
+推送到 `main` / `master` 或提交 **Pull Request** 时，[GitHub Actions](https://docs.github.com/en/actions) 会在 **macOS** Runner 上对模拟器执行 `xcodebuild test`（工作流：`.github/workflows/ios-test.yml`）。需在仓库中启用 Actions；若模拟器名称与 Runner 上 Xcode 不匹配，可编辑该文件中的 `-destination`。
+
+## Xcode 工程配置（单一来源）
+
+**以 `project.yml` 为准**，不要用 Xcode 长期手改 `project.pbxproj` 与 YAML 双头维护。修改流程与 `xcodegen` 命令见 **`docs/工程配置说明.md`**；仓库内仍保留生成的 `project.pbxproj` 便于未安装 XcodeGen 时直接打开工程。
+
 ## 说明
 
-本项目目前还没有经过严格测试，现阶段更适合用于持续校准、对照样本和验证算法实现。
+本项目仍以持续校准与对照 APK 样本为主；单元测试用于锁定输入解析等工程层行为，**排盘算法回归**仍建议结合既有样本集。
 
 已通过的样本覆盖以下边界条件：真太阳时 vs 北京时间输入、子时跨日、节气边界（立春 / 惊蛰等精确时刻）、换月开关、闰月年份、不同性别的大限方向。如果后续补充更多规则或修改逻辑，建议以现有样本做回归校验后再提交。

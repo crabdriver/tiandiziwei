@@ -1,5 +1,5 @@
 // TrueSolarTime.swift - 真太阳时修正
-// 紫微斗数-点亮星空版 iOS 版
+// 看盘啦 · iOS 紫微斗数排盘
 
 import Foundation
 

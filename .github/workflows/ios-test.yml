@@ -1,0 +1,38 @@
+# 在 macOS Runner 上执行 ZiWeiDoushuDianLiangXingKongTests（模拟器）。
+# 需仓库内存在共享 Scheme：ZiWeiDoushuDianLiangXingKong.xcodeproj/xcshareddata/xcschemes/
+
+name: iOS Unit Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ios-test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: xcodebuild test (Simulator)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: List schemes
+        run: xcodebuild -list -project ZiWeiDoushuDianLiangXingKong.xcodeproj
+
+      # 使用常见模拟器名；若 Runner 上无该机型，可改为 iPhone 16 或见 xcodebuild -showdestinations
+      - name: Run unit tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project ZiWeiDoushuDianLiangXingKong.xcodeproj \
+            -scheme ZiWeiDoushuDianLiangXingKong \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -quiet

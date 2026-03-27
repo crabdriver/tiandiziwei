@@ -1,22 +1,56 @@
+# 单一配置源：修改工程结构、Target、编译选项时只编辑本文件，然后执行 XcodeGen 生成 project.pbxproj。
+# 命令：xcodegen generate --spec project.yml
+# 请勿在 Xcode 里长期手改 project.pbxproj 再反向同步（易分叉）；应急手改后请把差异合并回本文件并重新 generate。
+
 name: ZiWeiDoushuDianLiangXingKong
 options:
   bundleIdPrefix: com.ziweidoushu.diandengxingkong
   deploymentTarget:
-    iOS: "16.0"
+    iOS: "17.0"
+  xcodeVersion: "15.0"
+
 targets:
   ZiWeiDoushuDianLiangXingKong:
     type: application
     platform: iOS
     sources:
-      - ZiWeiDoushuDianLiangXingKong
+      - path: ZiWeiDoushuDianLiangXingKong
     settings:
       GENERATE_INFOPLIST_FILE: true
       INFOPLIST_KEY_UIApplicationSceneManifest_Generation: true
       INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: true
       INFOPLIST_KEY_UILaunchScreen_Generation: true
-      "INFOPLIST_KEY_CFBundleDisplayName": "紫微斗数-点亮星空版"
+      INFOPLIST_KEY_CFBundleDisplayName: "看盘啦"
       PRODUCT_BUNDLE_IDENTIFIER: com.ziweidoushu.diandengxingkong.ios
       SWIFT_VERSION: "5.9"
       MARKETING_VERSION: "1.0.0"
       CURRENT_PROJECT_VERSION: "1"
       CODE_SIGN_STYLE: Automatic
+      configs:
+        Debug:
+          ENABLE_TESTABILITY: true
+
+  ZiWeiDoushuDianLiangXingKongTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ZiWeiDoushuDianLiangXingKongTests
+    dependencies:
+      - target: ZiWeiDoushuDianLiangXingKong
+    settings:
+      GENERATE_INFOPLIST_FILE: true
+      SWIFT_VERSION: "5.9"
+      IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+      CODE_SIGN_STYLE: Automatic
+      TEST_HOST: $(BUILT_PRODUCTS_DIR)/ZiWeiDoushuDianLiangXingKong.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ZiWeiDoushuDianLiangXingKong
+      BUNDLE_LOADER: $(TEST_HOST)
+
+# 共享 Scheme：供 Xcode / CI（xcodebuild -scheme）使用；重新 generate 后会生成等价 xcscheme。
+schemes:
+  ZiWeiDoushuDianLiangXingKong:
+    build:
+      targets:
+        ZiWeiDoushuDianLiangXingKong: all
+    test:
+      targets:
+        - ZiWeiDoushuDianLiangXingKongTests

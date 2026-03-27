@@ -1,5 +1,5 @@
 // StarBrightness.swift - 星曜庙旺利陷表
-// 紫微斗数-点亮星空版 iOS 版
+// 看盘啦 · iOS 紫微斗数排盘
 // 数据来源：紫微斗数古籍标准亮度表
 
 import Foundation

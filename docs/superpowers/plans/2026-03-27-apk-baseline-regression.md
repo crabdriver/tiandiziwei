@@ -164,9 +164,10 @@ Expected: FAIL because the loader / fixture / bundled resource does not exist ye
 - [ ] **Step 3: Add baseline models, fixture README, first JSON, and test-bundle resource config**
 
 Implement:
-- `Codable` baseline structs with explicit top-level sections: `input`, `expected.global`, `expected.palaces`, `source`
+- `Codable` baseline structs with explicit top-level fields and sections: `id`, `input`, `expected.global`, `expected.palaces`, `source`
 - `project.yml` resource wiring for `ZiWeiDoushuDianLiangXingKongTests/Fixtures/APKBaselines`
 - loader that can decode one named fixture from the test bundle
+- add `func makeChart() -> ZiWeiChart` on the fixture input model so tests can call `fixture.input.makeChart()`
 - fixture README rules that explicitly require APK-sourced `expected` values and `source` traceability
 
 - [ ] **Step 4: Run the test to verify it passes**
@@ -298,7 +299,7 @@ Expected: FAIL because the regression test and baseline comparison logic do not 
 - [ ] **Step 3: Implement comparison helpers and fixture iteration**
 
 Implement:
-- helper that turns one fixture input into one `ZiWeiChart`
+- implement `fixture.input.makeChart()` on the input model as the canonical way to turn one fixture input into one `ZiWeiChart`
 - core-field assertions for all first-wave targets from the spec: `mingGong`, `shenGong`, `siHuaInfo`, `isShun` / big-luck direction, age-range fields, and selected major-star placements
 - clear failure messages that name the fixture ID and the mismatched field
 
