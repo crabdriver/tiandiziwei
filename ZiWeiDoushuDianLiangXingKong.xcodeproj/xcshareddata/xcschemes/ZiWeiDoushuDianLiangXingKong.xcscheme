@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1600"
+   LastUpgradeVersion = "1500"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E990CADF18D556B5BCC1E36A"
+               BlueprintIdentifier = "4B6193D1C7DE81E48ED73ECB"
                BuildableName = "ZiWeiDoushuDianLiangXingKong.app"
                BlueprintName = "ZiWeiDoushuDianLiangXingKong"
                ReferencedContainer = "container:ZiWeiDoushuDianLiangXingKong.xcodeproj">
@@ -24,28 +25,39 @@
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
-      selectedDebugger = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncher = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      onlyGenerateCoverageForSpecifiedTargets = "NO">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4B6193D1C7DE81E48ED73ECB"
+            BuildableName = "ZiWeiDoushuDianLiangXingKong.app"
+            BlueprintName = "ZiWeiDoushuDianLiangXingKong"
+            ReferencedContainer = "container:ZiWeiDoushuDianLiangXingKong.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO"
-            parallelizable = "YES">
+            parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A1B2C3D4E5F60718291A1B1C"
+               BlueprintIdentifier = "9EB397F1CE95586E46FB1D9E"
                BuildableName = "ZiWeiDoushuDianLiangXingKongTests.xctest"
                BlueprintName = "ZiWeiDoushuDianLiangXingKongTests"
                ReferencedContainer = "container:ZiWeiDoushuDianLiangXingKong.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
-      selectedDebugger = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncher = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -56,7 +68,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E990CADF18D556B5BCC1E36A"
+            BlueprintIdentifier = "4B6193D1C7DE81E48ED73ECB"
             BuildableName = "ZiWeiDoushuDianLiangXingKong.app"
             BlueprintName = "ZiWeiDoushuDianLiangXingKong"
             ReferencedContainer = "container:ZiWeiDoushuDianLiangXingKong.xcodeproj">
@@ -73,7 +85,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E990CADF18D556B5BCC1E36A"
+            BlueprintIdentifier = "4B6193D1C7DE81E48ED73ECB"
             BuildableName = "ZiWeiDoushuDianLiangXingKong.app"
             BlueprintName = "ZiWeiDoushuDianLiangXingKong"
             ReferencedContainer = "container:ZiWeiDoushuDianLiangXingKong.xcodeproj">
