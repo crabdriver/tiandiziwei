@@ -359,7 +359,8 @@ class LunarCalendarConverter {
     
     /// 将小时转换为时辰索引（传统子初起算：23 点入子时）
     static func hourToShiChen(_ hour: Int) -> Int {
-        ((hour + 1) / 2) % 12
+        let normalizedHour = ((hour % 24) + 24) % 24
+        return normalizedHour == 23 ? 0 : normalizedHour / 2
     }
 
     /// 将钟表小时转换为时辰索引（北京时间样本对照：00 点入子时）

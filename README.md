@@ -91,6 +91,45 @@
 | `LunarCalendarConverterTests.swift` | 时辰索引、闰月与月天数等 |
 | `TrueSolarTimeTests.swift` | 均时差、标准经度下真太阳时 |
 | `ZiWeiEnginePureHelpersTests.swift` | 四化表、地支运算、命宫/身宫公式等（**不调用** `generateChart` 整盘） |
+| `APKBaselineLoaderTests.swift` | APK fixture bundle 装载、JSON 解码、`apkRaw -> ZiWeiChart` |
+| `ZiWeiChartComparableSnapshotTests.swift` | `ZiWeiChart` 稳定可比较快照映射 |
+| `APKBaselineRegressionTests.swift` | 真实 APK 基线字段与 iOS 输出对比 |
+
+## APK 基线回归
+
+当前 APK 基线层由三部分组成：
+
+- `ZiWeiDoushuDianLiangXingKongTests/Fixtures/APKBaselines/`：真实 APK 结果整理后的 JSON fixture
+- `docs/apk-baselines/runtime-setup.md` / `apk-source-log.md` / `capture-workflow.md`：运行环境、APK 冻结信息与采集流程
+- `scripts/run-apk-baseline-tests.sh`：本地稳定回归入口
+
+本地推荐命令：
+
+```bash
+./scripts/run-apk-baseline-tests.sh
+```
+
+如果本机模拟器名称或系统版本与默认值不同，可覆盖 destination：
+
+```bash
+APK_BASELINE_DESTINATION="platform=iOS Simulator,name=iPhone 16,OS=26.4" \
+  ./scripts/run-apk-baseline-tests.sh
+```
+
+该脚本固定运行以下三组测试：
+
+- `APKBaselineLoaderTests`
+- `ZiWeiChartComparableSnapshotTests`
+- `APKBaselineRegressionTests`
+
+若需要跑完整单元测试套件，可执行：
+
+```bash
+xcodebuild test \
+  -project ZiWeiDoushuDianLiangXingKong.xcodeproj \
+  -scheme ZiWeiDoushuDianLiangXingKong \
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.4'
+```
 
 ## CI（自动测试）
 

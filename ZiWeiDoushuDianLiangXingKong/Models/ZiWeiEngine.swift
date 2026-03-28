@@ -136,35 +136,33 @@ class ZiWeiEngine {
         return ((2 + offsetFromYin) % 12 + 12) % 12
     }
     
-    /// 安紫微星系（紫微、天机、太阳、武曲、天同、廉贞）
+    /// 安十四正曜的 APK 固定模板（以紫微落宫为基准）
     static func placeZiWeiSeries(ziWeiPos: Int) -> [String: Int] {
         var result: [String: Int] = [:]
         result["紫微"] = ziWeiPos
-        // 紫微星系按固定间隔排列（逆时针）
-        // 紫微 -> 天机(逆1) -> 空(逆2) -> 太阳(逆3) -> 武曲(逆4) -> 天同(逆5) -> 空(逆6) -> 空(逆7) -> 廉贞(逆8)
+        // APK 盘面的十四正曜不是“连续无空宫”的两条链，
+        // 而是围绕紫微落宫展开的固定模板。
         result["天机"] = (ziWeiPos - 1 + 12) % 12
-        result["太阳"] = (ziWeiPos - 3 + 12) % 12
-        result["武曲"] = (ziWeiPos - 4 + 12) % 12
-        result["天同"] = (ziWeiPos - 5 + 12) % 12
-        result["廉贞"] = (ziWeiPos - 8 + 12) % 12
+        result["太阳"] = (ziWeiPos - 2 + 12) % 12
+        result["武曲"] = (ziWeiPos - 3 + 12) % 12
+        result["天同"] = (ziWeiPos - 4 + 12) % 12
+        result["廉贞"] = (ziWeiPos + 3) % 12
         return result
     }
     
-    /// 安天府星系（天府、太阴、贪狼、巨门、天相、天梁、七杀、破军）
+    /// 安天府系正曜（以紫微落宫为基准）
     static func placeTianFuSeries(ziWeiPos: Int) -> [String: Int] {
         var result: [String: Int] = [:]
-        // 天府与紫微关于寅-申轴对称
-        let tianFuPos = (4 - ziWeiPos + 12) % 12  // 寅宫为轴
-        result["天府"] = tianFuPos
-        // 天府星系顺时针排列
-        result["太阴"] = (tianFuPos + 1) % 12
-        result["贪狼"] = (tianFuPos + 2) % 12
-        result["巨门"] = (tianFuPos + 3) % 12
-        result["天相"] = (tianFuPos + 4) % 12
-        result["天梁"] = (tianFuPos + 5) % 12
-        result["七杀"] = (tianFuPos + 6) % 12
-        // 破军: 天府之后第10位
-        result["破军"] = (tianFuPos + 10) % 12
+        // 这里不再沿用“先求天府对称宫，再顺推整链”的简化写法，
+        // 因为真实 APK 盘面的主星模板在若干位置保留空宫。
+        result["天府"] = (ziWeiPos + 1) % 12
+        result["太阴"] = (ziWeiPos + 2) % 12
+        result["贪狼"] = (ziWeiPos + 3) % 12
+        result["巨门"] = (ziWeiPos + 5) % 12
+        result["天相"] = (ziWeiPos + 6) % 12
+        result["天梁"] = (ziWeiPos + 8) % 12
+        result["七杀"] = (ziWeiPos + 9) % 12
+        result["破军"] = ziWeiPos
         return result
     }
 

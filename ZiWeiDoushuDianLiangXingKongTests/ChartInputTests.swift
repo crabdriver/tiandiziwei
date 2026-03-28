@@ -53,7 +53,10 @@ final class ChartInputTests: XCTestCase {
         XCTAssertEqual(parsed?.timeInputMode, .lunarTime)
         XCTAssertEqual(parsed?.isLeapMonth, true)
         XCTAssertEqual(parsed?.year, 2020)
-        XCTAssertEqual(parsed?.longitude, 116.4, accuracy: 0.01)
+        guard let parsed else {
+            return XCTFail("应成功解析 lunarTime APK 参数串")
+        }
+        XCTAssertEqual(parsed.longitude, 116.4, accuracy: 0.01)
     }
 
     func testApkRoundTripTrueSolarTime() {

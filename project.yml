@@ -16,16 +16,17 @@ targets:
     sources:
       - path: ZiWeiDoushuDianLiangXingKong
     settings:
-      GENERATE_INFOPLIST_FILE: true
-      INFOPLIST_KEY_UIApplicationSceneManifest_Generation: true
-      INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: true
-      INFOPLIST_KEY_UILaunchScreen_Generation: true
-      INFOPLIST_KEY_CFBundleDisplayName: "看盘啦"
-      PRODUCT_BUNDLE_IDENTIFIER: com.ziweidoushu.diandengxingkong.ios
-      SWIFT_VERSION: "5.9"
-      MARKETING_VERSION: "1.0.0"
-      CURRENT_PROJECT_VERSION: "1"
-      CODE_SIGN_STYLE: Automatic
+      base:
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: true
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: true
+        INFOPLIST_KEY_UILaunchScreen_Generation: true
+        INFOPLIST_KEY_CFBundleDisplayName: "看盘啦"
+        PRODUCT_BUNDLE_IDENTIFIER: com.ziweidoushu.diandengxingkong.ios
+        SWIFT_VERSION: "5.9"
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        CODE_SIGN_STYLE: Automatic
       configs:
         Debug:
           ENABLE_TESTABILITY: true
@@ -35,6 +36,11 @@ targets:
     platform: iOS
     sources:
       - path: ZiWeiDoushuDianLiangXingKongTests
+    resources:
+      # 仅拷贝 JSON；loader 同时支持 bundle 根目录与 Fixtures/APKBaselines 子目录
+      - path: ZiWeiDoushuDianLiangXingKongTests/Fixtures/APKBaselines
+        includes:
+          - "*.json"
     dependencies:
       - target: ZiWeiDoushuDianLiangXingKong
     settings:

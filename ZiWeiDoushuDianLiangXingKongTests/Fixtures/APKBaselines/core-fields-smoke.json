@@ -1,0 +1,27 @@
+{
+  "id": "core-fields-smoke",
+  "input": {
+    "apkRaw": "圻拆祗柝袛祇#2|2026|03|27|22|34|24|120.000000|-8|1|0"
+  },
+  "expected": {
+    "global": {
+      "mingGong": "辰",
+      "shenGong": "寅",
+      "mingZhu": "廉贞",
+      "shenZhu": "铃星"
+    },
+    "palaces": []
+  },
+  "source": {
+    "apkClockRaw": "圻拆祗柝袛祇#1|2026|3|27|22|39|43|120.0|-8|1|0",
+    "documents": [
+      "docs/apk-baselines/runtime-setup.md",
+      "docs/apk-baselines/apk-source-log.md"
+    ],
+    "notes": [
+      "2026-03-27 真实 APK 样本。",
+      "仅录入已确认的命宫、身宫、命主、身主。",
+      "未确认宫位字段保持空数组，不使用 iOS 输出反填。"
+    ]
+  }
+}

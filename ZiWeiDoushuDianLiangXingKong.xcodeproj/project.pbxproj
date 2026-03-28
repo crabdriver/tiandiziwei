@@ -7,146 +7,213 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0BBBF525AFE087C665D2E3F3 /* ChartDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D2C6740E4D06BE31B1A32E /* ChartDisplayView.swift */; };
-		173962DD66C4A1751AD3E3C5 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A7A9E356C69A3D02B370D /* InputView.swift */; };
-		1C0BBC2EDAA72E2B0ED22206 /* LunarCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EECAA68FD75B62267060F315 /* LunarCalendar.swift */; };
-		264DB4027D2DA80B72D48B06 /* ZiWeiDoushuDianLiangXingKongApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B11F3A82D541970B8D78CA8 /* ZiWeiDoushuDianLiangXingKongApp.swift */; };
-		356CF9846B7125E6EEA63BA4 /* TrueSolarTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9C633395EF38C2866D41A /* TrueSolarTime.swift */; };
-		388525CFC46DC5BF6A5925BF /* ZiWeiChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9764C459C42F6761EC33E6 /* ZiWeiChartView.swift */; };
-		6477AB9E157D97552448FADD /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBA4C567D5811586D5DF5D7 /* ChartViewModel.swift */; };
-		9C3F8B3D028B8251FD1C628A /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0442E41522B24F24B901BB7 /* ColorTheme.swift */; };
-		AB11F854A270853CB2711AFA /* ZiWeiEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C45F812E6232E903D9AA5C /* ZiWeiEngine.swift */; };
-		AE12ECC948186A9C6A221635 /* FlowYearStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CADC986ADD6745EF58277E /* FlowYearStars.swift */; };
-		BE9D8EA2B873C72046E3962B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 489D3B3C60584BC7F3A62800 /* Assets.xcassets */; };
-		DF043E5D58935DA1C5375372 /* StarBrightness.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A48768C1725AF0DAD03284 /* StarBrightness.swift */; };
-		6A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift */; };
-		A1B2C3D4E5F60718291A1B1F /* ChartInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718291A1B1E /* ChartInputTests.swift */; };
-		D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1 /* LunarCalendarConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D2 /* LunarCalendarConverterTests.swift */; };
-		D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2 /* TrueSolarTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D3 /* TrueSolarTimeTests.swift */; };
-		D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3 /* ZiWeiEnginePureHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D4 /* ZiWeiEnginePureHelpersTests.swift */; };
+		12101D369FBFB70035BEE490 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7828749E4CBABCA0780B3F4 /* Assets.xcassets */; };
+		12F063268A45360525C79674 /* sihua-smoke.json in Resources */ = {isa = PBXBuildFile; fileRef = 65CEEBC7C3FF0C43B2E94603 /* sihua-smoke.json */; };
+		204F139BA074E7C23CF5B8E6 /* star-placement-smoke.json in Resources */ = {isa = PBXBuildFile; fileRef = E63AD059E30D7FD6CB33713A /* star-placement-smoke.json */; };
+		226196749DDD4D912BACBECF /* ZiWeiChartComparableSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEE2B6055355BEB970B7950 /* ZiWeiChartComparableSnapshotTests.swift */; };
+		279A55335F065C5D2BF0C05B /* ChartDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E6082BC40ED2DF64AF272A /* ChartDisplayView.swift */; };
+		2BB1FC9AA9A989DDDD4E57B8 /* TrueSolarTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124720068A77CAD222D16F76 /* TrueSolarTimeTests.swift */; };
+		32A7490DF67CB1084750AE13 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A0D9D2A189A61EDAE9DB1C /* ChartViewModel.swift */; };
+		37B7038FEB04542D5A0ED256 /* APKBaselineRegressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FFBA7C424544F14BD4BB6A /* APKBaselineRegressionTests.swift */; };
+		5A6A4C5C8667D5D727591A70 /* ZiWeiChartComparableSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2006AA317F1706D300BC7F /* ZiWeiChartComparableSnapshot.swift */; };
+		6E3FB86B002857A0F362670D /* APKBaselineLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF181E2EB1501A9347C6417 /* APKBaselineLoaderTests.swift */; };
+		6F1E4152F708AECA3BD59E69 /* ZiWeiChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA58F00EDB745E5826EE6965 /* ZiWeiChartView.swift */; };
+		717464F91F97C56A767DD444 /* ZiWeiEnginePureHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B713C09B292BDCB1032FF5 /* ZiWeiEnginePureHelpersTests.swift */; };
+		78FE65089D57FAD65399359D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FDEF2291C15BDBD5D4F33C2F /* README.md */; };
+		7B02E71A9091B1BFE323C1F3 /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CD6E28CEAAB864150B03B9 /* ColorTheme.swift */; };
+		7DE315925944586C21F9115D /* ZiWeiDoushuDianLiangXingKongApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D4E99CF49E65AB837F7F3 /* ZiWeiDoushuDianLiangXingKongApp.swift */; };
+		891E9224DC7834EDD714305C /* LunarCalendarConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D267A61AE7E1D795EE56AA2 /* LunarCalendarConverterTests.swift */; };
+		90DD5C6F8D0CFE4B16A4F006 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F340168394BB822AFFA48 /* InputView.swift */; };
+		94F831DF48271EB0C0E46265 /* LunarCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFCBA8A8674C97F7EE86F3D /* LunarCalendar.swift */; };
+		B34A3B4C8A87A35028E13AB0 /* ZiWeiEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAA969EF713DE9808479F74 /* ZiWeiEngine.swift */; };
+		C475802D3DBE1F98CC16A25A /* core-fields-smoke.json in Resources */ = {isa = PBXBuildFile; fileRef = 105AE492B9A8DB74FC5CC2AE /* core-fields-smoke.json */; };
+		C4C628660997771098AA3C49 /* APKBaselineCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6E93A75B39DB6ADBBB962 /* APKBaselineCase.swift */; };
+		DB223BE68A80DA60BE9AB668 /* daxian-direction-smoke.json in Resources */ = {isa = PBXBuildFile; fileRef = C911B3C8C01AE8DEFD451E68 /* daxian-direction-smoke.json */; };
+		DE1AA0C3802997484A693758 /* StarBrightness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15DA0B85E93AEDED20D0CB38 /* StarBrightness.swift */; };
+		DE917F399D1E2AEB927CC3FB /* ChartInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D51FD01532F5A39DAA0A194 /* ChartInputTests.swift */; };
+		E21614C921D01549EC45FAB9 /* APKBaselineLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE9745FDFF9474B96956EA4 /* APKBaselineLoader.swift */; };
+		EF5027EA3AF5D2CC1B3EE82C /* PalaceDetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98847EB06593EE6A2B7FC73B /* PalaceDetailContent.swift */; };
+		F06E155BFACC879BE0A73947 /* TrueSolarTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8508DD7B3D6DAEF95A21F6D4 /* TrueSolarTime.swift */; };
+		FB7FE9110037DA3350F1D72D /* FlowYearStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA53EF047A4BCFB5A1D8A86 /* FlowYearStars.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CADE21F4CF7B18FE384C2AE7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA5F7A0A98E012B8FAAEC0E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B6193D1C7DE81E48ED73ECB;
+			remoteInfo = ZiWeiDoushuDianLiangXingKong;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		2DF9C633395EF38C2866D41A /* TrueSolarTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueSolarTime.swift; sourceTree = "<group>"; };
-		489D3B3C60584BC7F3A62800 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		540A7A9E356C69A3D02B370D /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
-		5FBA4C567D5811586D5DF5D7 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
-		6621CDDAD3AD4E9F11B9EF9F /* ZiWeiDoushuDianLiangXingKong.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ZiWeiDoushuDianLiangXingKong.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B11F3A82D541970B8D78CA8 /* ZiWeiDoushuDianLiangXingKongApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiDoushuDianLiangXingKongApp.swift; sourceTree = "<group>"; };
-		84D2C6740E4D06BE31B1A32E /* ChartDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDisplayView.swift; sourceTree = "<group>"; };
-		89CADC986ADD6745EF58277E /* FlowYearStars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowYearStars.swift; sourceTree = "<group>"; };
-		9D9764C459C42F6761EC33E6 /* ZiWeiChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiChartView.swift; sourceTree = "<group>"; };
-		A3A48768C1725AF0DAD03284 /* StarBrightness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarBrightness.swift; sourceTree = "<group>"; };
-		7A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalaceDetailContent.swift; sourceTree = "<group>"; };
-		EECAA68FD75B62267060F315 /* LunarCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunarCalendar.swift; sourceTree = "<group>"; };
-		F0442E41522B24F24B901BB7 /* ColorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
-		F5C45F812E6232E903D9AA5C /* ZiWeiEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiEngine.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60718291A1B1D /* ZiWeiDoushuDianLiangXingKongTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZiWeiDoushuDianLiangXingKongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1B2C3D4E5F60718291A1B1E /* ChartInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartInputTests.swift; sourceTree = "<group>"; };
-		D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D2 /* LunarCalendarConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunarCalendarConverterTests.swift; sourceTree = "<group>"; };
-		D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D3 /* TrueSolarTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueSolarTimeTests.swift; sourceTree = "<group>"; };
-		D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D4 /* ZiWeiEnginePureHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiEnginePureHelpersTests.swift; sourceTree = "<group>"; };
+		105AE492B9A8DB74FC5CC2AE /* core-fields-smoke.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "core-fields-smoke.json"; sourceTree = "<group>"; };
+		124720068A77CAD222D16F76 /* TrueSolarTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueSolarTimeTests.swift; sourceTree = "<group>"; };
+		15DA0B85E93AEDED20D0CB38 /* StarBrightness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarBrightness.swift; sourceTree = "<group>"; };
+		3D51FD01532F5A39DAA0A194 /* ChartInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartInputTests.swift; sourceTree = "<group>"; };
+		3EC6E93A75B39DB6ADBBB962 /* APKBaselineCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APKBaselineCase.swift; sourceTree = "<group>"; };
+		4B2006AA317F1706D300BC7F /* ZiWeiChartComparableSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiChartComparableSnapshot.swift; sourceTree = "<group>"; };
+		4BAA969EF713DE9808479F74 /* ZiWeiEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiEngine.swift; sourceTree = "<group>"; };
+		4FEE2B6055355BEB970B7950 /* ZiWeiChartComparableSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiChartComparableSnapshotTests.swift; sourceTree = "<group>"; };
+		5F1D9CFCBA1E7686C3463F01 /* ZiWeiDoushuDianLiangXingKongTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ZiWeiDoushuDianLiangXingKongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		61A0D9D2A189A61EDAE9DB1C /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
+		61CD6E28CEAAB864150B03B9 /* ColorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
+		65CEEBC7C3FF0C43B2E94603 /* sihua-smoke.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "sihua-smoke.json"; sourceTree = "<group>"; };
+		7B9D4E99CF49E65AB837F7F3 /* ZiWeiDoushuDianLiangXingKongApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiDoushuDianLiangXingKongApp.swift; sourceTree = "<group>"; };
+		8508DD7B3D6DAEF95A21F6D4 /* TrueSolarTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueSolarTime.swift; sourceTree = "<group>"; };
+		8DF181E2EB1501A9347C6417 /* APKBaselineLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APKBaselineLoaderTests.swift; sourceTree = "<group>"; };
+		98847EB06593EE6A2B7FC73B /* PalaceDetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalaceDetailContent.swift; sourceTree = "<group>"; };
+		9D267A61AE7E1D795EE56AA2 /* LunarCalendarConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunarCalendarConverterTests.swift; sourceTree = "<group>"; };
+		A7E6082BC40ED2DF64AF272A /* ChartDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDisplayView.swift; sourceTree = "<group>"; };
+		B1397CAF1E861012FF6F4BAA /* ZiWeiDoushuDianLiangXingKong.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ZiWeiDoushuDianLiangXingKong.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C911B3C8C01AE8DEFD451E68 /* daxian-direction-smoke.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "daxian-direction-smoke.json"; sourceTree = "<group>"; };
+		CA58F00EDB745E5826EE6965 /* ZiWeiChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiChartView.swift; sourceTree = "<group>"; };
+		E3FFBA7C424544F14BD4BB6A /* APKBaselineRegressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APKBaselineRegressionTests.swift; sourceTree = "<group>"; };
+		E63AD059E30D7FD6CB33713A /* star-placement-smoke.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "star-placement-smoke.json"; sourceTree = "<group>"; };
+		EDA53EF047A4BCFB5A1D8A86 /* FlowYearStars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowYearStars.swift; sourceTree = "<group>"; };
+		EDE9745FDFF9474B96956EA4 /* APKBaselineLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APKBaselineLoader.swift; sourceTree = "<group>"; };
+		EEFCBA8A8674C97F7EE86F3D /* LunarCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunarCalendar.swift; sourceTree = "<group>"; };
+		F4B713C09B292BDCB1032FF5 /* ZiWeiEnginePureHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZiWeiEnginePureHelpersTests.swift; sourceTree = "<group>"; };
+		F68F340168394BB822AFFA48 /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
+		F7828749E4CBABCA0780B3F4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FDEF2291C15BDBD5D4F33C2F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		0346FF409E753F0EAE986828 /* ViewModels */ = {
+		04FEE54D75EF5FE00FCCD39B /* ZiWeiDoushuDianLiangXingKongTests */ = {
 			isa = PBXGroup;
 			children = (
-				5FBA4C567D5811586D5DF5D7 /* ChartViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		29747222D5E9C183B399EE85 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				F0442E41522B24F24B901BB7 /* ColorTheme.swift */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
-		2B00D7D3CCC51F20730DF3D3 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				84D2C6740E4D06BE31B1A32E /* ChartDisplayView.swift */,
-				540A7A9E356C69A3D02B370D /* InputView.swift */,
-				7A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift */,
-				9D9764C459C42F6761EC33E6 /* ZiWeiChartView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		58108EC0E458AF242D92C7CD /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				89CADC986ADD6745EF58277E /* FlowYearStars.swift */,
-				EECAA68FD75B62267060F315 /* LunarCalendar.swift */,
-				A3A48768C1725AF0DAD03284 /* StarBrightness.swift */,
-				2DF9C633395EF38C2866D41A /* TrueSolarTime.swift */,
-				F5C45F812E6232E903D9AA5C /* ZiWeiEngine.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		9C8CFB76B70E7C85229E62E5 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				489D3B3C60584BC7F3A62800 /* Assets.xcassets */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60718291A1B2E /* ZiWeiDoushuDianLiangXingKongTests */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60718291A1B1E /* ChartInputTests.swift */,
-				D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D2 /* LunarCalendarConverterTests.swift */,
-				D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D3 /* TrueSolarTimeTests.swift */,
-				D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D4 /* ZiWeiEnginePureHelpersTests.swift */,
+				8DF181E2EB1501A9347C6417 /* APKBaselineLoaderTests.swift */,
+				E3FFBA7C424544F14BD4BB6A /* APKBaselineRegressionTests.swift */,
+				3D51FD01532F5A39DAA0A194 /* ChartInputTests.swift */,
+				9D267A61AE7E1D795EE56AA2 /* LunarCalendarConverterTests.swift */,
+				124720068A77CAD222D16F76 /* TrueSolarTimeTests.swift */,
+				4FEE2B6055355BEB970B7950 /* ZiWeiChartComparableSnapshotTests.swift */,
+				F4B713C09B292BDCB1032FF5 /* ZiWeiEnginePureHelpersTests.swift */,
+				553CDC841DDE0A28E376977F /* Fixtures */,
+				EC83BEBD903D255069256A65 /* Support */,
 			);
 			path = ZiWeiDoushuDianLiangXingKongTests;
 			sourceTree = "<group>";
 		};
-		B31362BC9E4D35FCAD15B015 = {
+		05CE7B39AEF2F4088B744F7B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F9BC042AF137EE20003E9208 /* ZiWeiDoushuDianLiangXingKong */,
-				A1B2C3D4E5F60718291A1B2E /* ZiWeiDoushuDianLiangXingKongTests */,
-				C035CE5104BE5CA2527AC991 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		C035CE5104BE5CA2527AC991 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6621CDDAD3AD4E9F11B9EF9F /* ZiWeiDoushuDianLiangXingKong.app */,
-				A1B2C3D4E5F60718291A1B1D /* ZiWeiDoushuDianLiangXingKongTests.xctest */,
+				B1397CAF1E861012FF6F4BAA /* ZiWeiDoushuDianLiangXingKong.app */,
+				5F1D9CFCBA1E7686C3463F01 /* ZiWeiDoushuDianLiangXingKongTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F9BC042AF137EE20003E9208 /* ZiWeiDoushuDianLiangXingKong */ = {
+		066D7DCCDCC8F3E0CB79D1BE /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				6B11F3A82D541970B8D78CA8 /* ZiWeiDoushuDianLiangXingKongApp.swift */,
-				58108EC0E458AF242D92C7CD /* Models */,
-				9C8CFB76B70E7C85229E62E5 /* Resources */,
-				29747222D5E9C183B399EE85 /* Utils */,
-				0346FF409E753F0EAE986828 /* ViewModels */,
-				2B00D7D3CCC51F20730DF3D3 /* Views */,
+				A7E6082BC40ED2DF64AF272A /* ChartDisplayView.swift */,
+				F68F340168394BB822AFFA48 /* InputView.swift */,
+				98847EB06593EE6A2B7FC73B /* PalaceDetailContent.swift */,
+				CA58F00EDB745E5826EE6965 /* ZiWeiChartView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		34B4B78498DF192728DE61C2 /* ZiWeiDoushuDianLiangXingKong */ = {
+			isa = PBXGroup;
+			children = (
+				7B9D4E99CF49E65AB837F7F3 /* ZiWeiDoushuDianLiangXingKongApp.swift */,
+				E6A8798F76E3E8E2D3DBD3F2 /* Models */,
+				3C465B3CFC5B7572D3179E2A /* Resources */,
+				E9643366BB0F47326D637CEA /* Utils */,
+				C21C7586117AF361E96670B4 /* ViewModels */,
+				066D7DCCDCC8F3E0CB79D1BE /* Views */,
 			);
 			path = ZiWeiDoushuDianLiangXingKong;
+			sourceTree = "<group>";
+		};
+		3C465B3CFC5B7572D3179E2A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F7828749E4CBABCA0780B3F4 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5314342802705C27AD12DC1F = {
+			isa = PBXGroup;
+			children = (
+				34B4B78498DF192728DE61C2 /* ZiWeiDoushuDianLiangXingKong */,
+				04FEE54D75EF5FE00FCCD39B /* ZiWeiDoushuDianLiangXingKongTests */,
+				05CE7B39AEF2F4088B744F7B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		553CDC841DDE0A28E376977F /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				B73426B7B66C0784D38B9B41 /* APKBaselines */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		B73426B7B66C0784D38B9B41 /* APKBaselines */ = {
+			isa = PBXGroup;
+			children = (
+				105AE492B9A8DB74FC5CC2AE /* core-fields-smoke.json */,
+				C911B3C8C01AE8DEFD451E68 /* daxian-direction-smoke.json */,
+				FDEF2291C15BDBD5D4F33C2F /* README.md */,
+				65CEEBC7C3FF0C43B2E94603 /* sihua-smoke.json */,
+				E63AD059E30D7FD6CB33713A /* star-placement-smoke.json */,
+			);
+			path = APKBaselines;
+			sourceTree = "<group>";
+		};
+		C21C7586117AF361E96670B4 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				61A0D9D2A189A61EDAE9DB1C /* ChartViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		E6A8798F76E3E8E2D3DBD3F2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EDA53EF047A4BCFB5A1D8A86 /* FlowYearStars.swift */,
+				EEFCBA8A8674C97F7EE86F3D /* LunarCalendar.swift */,
+				15DA0B85E93AEDED20D0CB38 /* StarBrightness.swift */,
+				8508DD7B3D6DAEF95A21F6D4 /* TrueSolarTime.swift */,
+				4BAA969EF713DE9808479F74 /* ZiWeiEngine.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E9643366BB0F47326D637CEA /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				61CD6E28CEAAB864150B03B9 /* ColorTheme.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		EC83BEBD903D255069256A65 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				3EC6E93A75B39DB6ADBBB962 /* APKBaselineCase.swift */,
+				EDE9745FDFF9474B96956EA4 /* APKBaselineLoader.swift */,
+				4B2006AA317F1706D300BC7F /* ZiWeiChartComparableSnapshot.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E990CADF18D556B5BCC1E36A /* ZiWeiDoushuDianLiangXingKong */ = {
+		4B6193D1C7DE81E48ED73ECB /* ZiWeiDoushuDianLiangXingKong */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0DF420AC3F60DA7364B1485D /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKong" */;
+			buildConfigurationList = 2CEA91DCF53C1CFD32C27FE4 /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKong" */;
 			buildPhases = (
-				3AC4BB7F633729AE2AA347EE /* Sources */,
-				8086689369A517373083C00B /* Resources */,
+				A1E471D2E780D2928DF561F2 /* Sources */,
+				CF67243FE26FCCDFE641A635 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -156,140 +223,206 @@
 			packageProductDependencies = (
 			);
 			productName = ZiWeiDoushuDianLiangXingKong;
-			productReference = 6621CDDAD3AD4E9F11B9EF9F /* ZiWeiDoushuDianLiangXingKong.app */;
+			productReference = B1397CAF1E861012FF6F4BAA /* ZiWeiDoushuDianLiangXingKong.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A1B2C3D4E5F60718291A1B1C /* ZiWeiDoushuDianLiangXingKongTests */ = {
+		9EB397F1CE95586E46FB1D9E /* ZiWeiDoushuDianLiangXingKongTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A1B2C3D4E5F60718291A1B3B /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKongTests" */;
+			buildConfigurationList = AAAAB8454B35BD005B0D17D2 /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKongTests" */;
 			buildPhases = (
-				A1B2C3D4E5F60718291A1B2A /* Sources */,
-				A1B2C3D4E5F60718291A1B2B /* Frameworks */,
+				6E05C870742D6E5B48B67F43 /* Sources */,
+				A9CDAEBAC3FDAEC8644213CA /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				A1B2C3D4E5F60718291A1B2D /* PBXTargetDependency */,
+				E2F01C23664C278777846B32 /* PBXTargetDependency */,
 			);
 			name = ZiWeiDoushuDianLiangXingKongTests;
 			packageProductDependencies = (
 			);
 			productName = ZiWeiDoushuDianLiangXingKongTests;
-			productReference = A1B2C3D4E5F60718291A1B1D /* ZiWeiDoushuDianLiangXingKongTests.xctest */;
+			productReference = 5F1D9CFCBA1E7686C3463F01 /* ZiWeiDoushuDianLiangXingKongTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
-/* Begin PBXContainerItemProxy section */
-		A1B2C3D4E5F60718291A1B2C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1FBF2E2C651C46A43D1425C8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E990CADF18D556B5BCC1E36A;
-			remoteInfo = ZiWeiDoushuDianLiangXingKong;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXTargetDependency section */
-		A1B2C3D4E5F60718291A1B2D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E990CADF18D556B5BCC1E36A /* ZiWeiDoushuDianLiangXingKong */;
-			targetProxy = A1B2C3D4E5F60718291A1B2C /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXProject section */
-		1FBF2E2C651C46A43D1425C8 /* Project object */ = {
+		AA5F7A0A98E012B8FAAEC0E3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					A1B2C3D4E5F60718291A1B1C = {
+					4B6193D1C7DE81E48ED73ECB = {
 						ProvisioningStyle = Automatic;
-						TestTargetID = E990CADF18D556B5BCC1E36A;
 					};
-					E990CADF18D556B5BCC1E36A = {
+					9EB397F1CE95586E46FB1D9E = {
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 5200FF96C2E0FEEA67ABEE64 /* Build configuration list for PBXProject "ZiWeiDoushuDianLiangXingKong" */;
+			buildConfigurationList = D75C07F870A87152B38C31BE /* Build configuration list for PBXProject "ZiWeiDoushuDianLiangXingKong" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
 				en,
 			);
-			mainGroup = B31362BC9E4D35FCAD15B015;
+			mainGroup = 5314342802705C27AD12DC1F;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = C035CE5104BE5CA2527AC991 /* Products */;
+			productRefGroup = 05CE7B39AEF2F4088B744F7B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E990CADF18D556B5BCC1E36A /* ZiWeiDoushuDianLiangXingKong */,
-				A1B2C3D4E5F60718291A1B1C /* ZiWeiDoushuDianLiangXingKongTests */,
+				4B6193D1C7DE81E48ED73ECB /* ZiWeiDoushuDianLiangXingKong */,
+				9EB397F1CE95586E46FB1D9E /* ZiWeiDoushuDianLiangXingKongTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		8086689369A517373083C00B /* Resources */ = {
+		A9CDAEBAC3FDAEC8644213CA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE9D8EA2B873C72046E3962B /* Assets.xcassets in Resources */,
+				78FE65089D57FAD65399359D /* README.md in Resources */,
+				C475802D3DBE1F98CC16A25A /* core-fields-smoke.json in Resources */,
+				DB223BE68A80DA60BE9AB668 /* daxian-direction-smoke.json in Resources */,
+				12F063268A45360525C79674 /* sihua-smoke.json in Resources */,
+				204F139BA074E7C23CF5B8E6 /* star-placement-smoke.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF67243FE26FCCDFE641A635 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12101D369FBFB70035BEE490 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXFrameworksBuildPhase section */
-		A1B2C3D4E5F60718291A1B2B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		A1B2C3D4E5F60718291A1B2A /* Sources */ = {
+		6E05C870742D6E5B48B67F43 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60718291A1B1F /* ChartInputTests.swift in Sources */,
-				D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1D1 /* LunarCalendarConverterTests.swift in Sources */,
-				D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2D2 /* TrueSolarTimeTests.swift in Sources */,
-				D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3D3 /* ZiWeiEnginePureHelpersTests.swift in Sources */,
+				C4C628660997771098AA3C49 /* APKBaselineCase.swift in Sources */,
+				E21614C921D01549EC45FAB9 /* APKBaselineLoader.swift in Sources */,
+				6E3FB86B002857A0F362670D /* APKBaselineLoaderTests.swift in Sources */,
+				37B7038FEB04542D5A0ED256 /* APKBaselineRegressionTests.swift in Sources */,
+				DE917F399D1E2AEB927CC3FB /* ChartInputTests.swift in Sources */,
+				891E9224DC7834EDD714305C /* LunarCalendarConverterTests.swift in Sources */,
+				2BB1FC9AA9A989DDDD4E57B8 /* TrueSolarTimeTests.swift in Sources */,
+				5A6A4C5C8667D5D727591A70 /* ZiWeiChartComparableSnapshot.swift in Sources */,
+				226196749DDD4D912BACBECF /* ZiWeiChartComparableSnapshotTests.swift in Sources */,
+				717464F91F97C56A767DD444 /* ZiWeiEnginePureHelpersTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3AC4BB7F633729AE2AA347EE /* Sources */ = {
+		A1E471D2E780D2928DF561F2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BBBF525AFE087C665D2E3F3 /* ChartDisplayView.swift in Sources */,
-				6477AB9E157D97552448FADD /* ChartViewModel.swift in Sources */,
-				9C3F8B3D028B8251FD1C628A /* ColorTheme.swift in Sources */,
-				AE12ECC948186A9C6A221635 /* FlowYearStars.swift in Sources */,
-				173962DD66C4A1751AD3E3C5 /* InputView.swift in Sources */,
-				6A8B9C0D1E2F3041526374A5B /* PalaceDetailContent.swift in Sources */,
-				1C0BBC2EDAA72E2B0ED22206 /* LunarCalendar.swift in Sources */,
-				DF043E5D58935DA1C5375372 /* StarBrightness.swift in Sources */,
-				356CF9846B7125E6EEA63BA4 /* TrueSolarTime.swift in Sources */,
-				388525CFC46DC5BF6A5925BF /* ZiWeiChartView.swift in Sources */,
-				AB11F854A270853CB2711AFA /* ZiWeiEngine.swift in Sources */,
-				264DB4027D2DA80B72D48B06 /* ZiWeiDoushuDianLiangXingKongApp.swift in Sources */,
+				279A55335F065C5D2BF0C05B /* ChartDisplayView.swift in Sources */,
+				32A7490DF67CB1084750AE13 /* ChartViewModel.swift in Sources */,
+				7B02E71A9091B1BFE323C1F3 /* ColorTheme.swift in Sources */,
+				FB7FE9110037DA3350F1D72D /* FlowYearStars.swift in Sources */,
+				90DD5C6F8D0CFE4B16A4F006 /* InputView.swift in Sources */,
+				94F831DF48271EB0C0E46265 /* LunarCalendar.swift in Sources */,
+				EF5027EA3AF5D2CC1B3EE82C /* PalaceDetailContent.swift in Sources */,
+				DE1AA0C3802997484A693758 /* StarBrightness.swift in Sources */,
+				F06E155BFACC879BE0A73947 /* TrueSolarTime.swift in Sources */,
+				6F1E4152F708AECA3BD59E69 /* ZiWeiChartView.swift in Sources */,
+				7DE315925944586C21F9115D /* ZiWeiDoushuDianLiangXingKongApp.swift in Sources */,
+				B34A3B4C8A87A35028E13AB0 /* ZiWeiEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		E2F01C23664C278777846B32 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B6193D1C7DE81E48ED73ECB /* ZiWeiDoushuDianLiangXingKong */;
+			targetProxy = CADE21F4CF7B18FE384C2AE7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
-		0CB71993C5EC004B0A74599F /* Debug */ = {
+		16122E25C3D16150CAFFBB42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "看盘啦";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		30A52B445CEEAECC612502D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "看盘啦";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		699869201FFE830279687D82 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ZiWeiDoushuDianLiangXingKongTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZiWeiDoushuDianLiangXingKong.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ZiWeiDoushuDianLiangXingKong";
+			};
+			name = Release;
+		};
+		6B06D0B89BCA759C9546F98A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -352,7 +485,7 @@
 			};
 			name = Debug;
 		};
-		0F34E50FF36049A9E9D166F9 /* Release */ = {
+		7B6E1A3B0270B900EC4593BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -408,61 +541,11 @@
 			};
 			name = Release;
 		};
-		74BA760C65828392B91BC95E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "看盘啦";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.9;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		9135CD05011CDF9AF67A3385 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "看盘啦";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.9;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		A1B2C3D4E5F60718291A1B2F /* Debug */ = {
+		F2E355E2D259016D2EE27D8C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -470,73 +553,45 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios.tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ZiWeiDoushuDianLiangXingKongTests;
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZiWeiDoushuDianLiangXingKong.app/ZiWeiDoushuDianLiangXingKong";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZiWeiDoushuDianLiangXingKong.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ZiWeiDoushuDianLiangXingKong";
 			};
 			name = Debug;
-		};
-		A1B2C3D4E5F60718291A1B3C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ziweidoushu.diandengxingkong.ios.tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.9;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZiWeiDoushuDianLiangXingKong.app/ZiWeiDoushuDianLiangXingKong";
-			};
-			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0DF420AC3F60DA7364B1485D /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKong" */ = {
+		2CEA91DCF53C1CFD32C27FE4 /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKong" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9135CD05011CDF9AF67A3385 /* Debug */,
-				74BA760C65828392B91BC95E /* Release */,
+				16122E25C3D16150CAFFBB42 /* Debug */,
+				30A52B445CEEAECC612502D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		5200FF96C2E0FEEA67ABEE64 /* Build configuration list for PBXProject "ZiWeiDoushuDianLiangXingKong" */ = {
+		AAAAB8454B35BD005B0D17D2 /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKongTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0CB71993C5EC004B0A74599F /* Debug */,
-				0F34E50FF36049A9E9D166F9 /* Release */,
+				F2E355E2D259016D2EE27D8C /* Debug */,
+				699869201FFE830279687D82 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		A1B2C3D4E5F60718291A1B3B /* Build configuration list for PBXNativeTarget "ZiWeiDoushuDianLiangXingKongTests" */ = {
+		D75C07F870A87152B38C31BE /* Build configuration list for PBXProject "ZiWeiDoushuDianLiangXingKong" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1B2C3D4E5F60718291A1B2F /* Debug */,
-				A1B2C3D4E5F60718291A1B3C /* Release */,
+				6B06D0B89BCA759C9546F98A /* Debug */,
+				7B6E1A3B0270B900EC4593BA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 1FBF2E2C651C46A43D1425C8 /* Project object */;
+	rootObject = AA5F7A0A98E012B8FAAEC0E3 /* Project object */;
 }

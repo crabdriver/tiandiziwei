@@ -48,4 +48,28 @@ final class ZiWeiEnginePureHelpersTests: XCTestCase {
         XCTAssertEqual(ZiWeiEngine.adjustedLunarMonth(12, useMonthAdjustment: true), 1)
         XCTAssertEqual(ZiWeiEngine.adjustedLunarMonth(3, useMonthAdjustment: true), 4)
     }
+
+    func testPlaceZiWeiSeriesUsesAPKVerifiedTemplateForWeiPalace() {
+        let result = ZiWeiEngine.placeZiWeiSeries(ziWeiPos: 7)
+
+        XCTAssertEqual(result["紫微"], 7) // 未
+        XCTAssertEqual(result["天机"], 6) // 午
+        XCTAssertEqual(result["太阳"], 5) // 巳
+        XCTAssertEqual(result["武曲"], 4) // 辰
+        XCTAssertEqual(result["天同"], 3) // 卯
+        XCTAssertEqual(result["廉贞"], 10) // 戌
+    }
+
+    func testPlaceTianFuSeriesUsesAPKVerifiedTemplateForWeiPalace() {
+        let result = ZiWeiEngine.placeTianFuSeries(ziWeiPos: 7)
+
+        XCTAssertEqual(result["破军"], 7) // 未
+        XCTAssertEqual(result["天府"], 8) // 申
+        XCTAssertEqual(result["太阴"], 9) // 酉
+        XCTAssertEqual(result["贪狼"], 10) // 戌
+        XCTAssertEqual(result["巨门"], 0) // 子
+        XCTAssertEqual(result["天相"], 1) // 丑
+        XCTAssertEqual(result["天梁"], 3) // 卯
+        XCTAssertEqual(result["七杀"], 4) // 辰
+    }
 }
