@@ -1,0 +1,36 @@
+{
+  "id": "star-placement-smoke",
+  "input": {
+    "apkRaw": "圻拆祗柝袛祇#2|2026|03|28|08|37|08|120.000000|-8|1|0"
+  },
+  "expected": {
+    "global": {},
+    "palaces": [
+      {
+        "position": "卯",
+        "majorStarNames": ["天同", "天梁"]
+      },
+      {
+        "position": "辰",
+        "majorStarNames": ["七杀", "武曲"]
+      },
+      {
+        "position": "戌",
+        "majorStarNames": ["廉贞", "贪狼"]
+      }
+    ]
+  },
+  "source": {
+    "apkClockRaw": "圻拆祗柝袛祇#1|2026|3|28|8|42|19|120.0|-8|1|0",
+    "documents": [
+      "docs/apk-baselines/runtime-setup.md",
+      "docs/apk-baselines/capture-workflow.md",
+      "docs/apk-baselines/wave3-sample-notes.md"
+    ],
+    "notes": [
+      "2026-03-28 真实 APK 样本，盘面截图文件为 /tmp/tiandiziwei-wave3-restart.png。",
+      "主星落宫由 ziweipan 页面截图人工读取，并用本机 Vision OCR 仅做放大小字辅助，不使用 iOS 输出反填。",
+      "本样本只编码正曜：卯宫读取为天同、天梁；辰宫读取为武曲、七杀；戌宫读取为廉贞、贪狼；同宫其他辅曜和杂曜不写入 majorStarNames。"
+    ]
+  }
+}

@@ -35,12 +35,69 @@ final class APKBaselineRegressionTests: XCTestCase {
                 fixtureID: fixture.id,
                 field: "shenZhu"
             )
+
+            assertEqualIfPresent(
+                snapshot.global.isShun,
+                fixture.expected.global.isShun,
+                fixtureID: fixture.id,
+                field: "isShun"
+            )
+            assertEqualIfPresent(
+                snapshot.global.siHuaInfo,
+                fixture.expected.global.siHuaInfo,
+                fixtureID: fixture.id,
+                field: "siHuaInfo"
+            )
+
+            for palaceExpectation in fixture.expected.palaces {
+                let palace = try XCTUnwrap(
+                    snapshot.palace(at: palaceExpectation.position),
+                    "[\(fixture.id)] 缺少宫位 \(palaceExpectation.position)"
+                )
+
+                assertEqualIfPresent(
+                    palace.daXian,
+                    palaceExpectation.daXian,
+                    fixtureID: fixture.id,
+                    field: "palaces[\(palaceExpectation.position)].daXian"
+                )
+                assertEqualIfPresent(
+                    palace.majorStars.map(\.name),
+                    palaceExpectation.majorStarNames,
+                    fixtureID: fixture.id,
+                    field: "palaces[\(palaceExpectation.position)].majorStarNames"
+                )
+            }
         }
     }
 
     private func assertEqualIfPresent(
         _ actual: String,
         _ expected: String?,
+        fixtureID: String,
+        field: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let expected else { return }
+        XCTAssertEqual(actual, expected, "[\(fixtureID)] \(field) mismatch", file: file, line: line)
+    }
+
+    private func assertEqualIfPresent(
+        _ actual: Bool,
+        _ expected: Bool?,
+        fixtureID: String,
+        field: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let expected else { return }
+        XCTAssertEqual(actual, expected, "[\(fixtureID)] \(field) mismatch", file: file, line: line)
+    }
+
+    private func assertEqualIfPresent(
+        _ actual: [String],
+        _ expected: [String]?,
         fixtureID: String,
         field: String,
         file: StaticString = #filePath,

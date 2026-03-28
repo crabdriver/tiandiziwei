@@ -1,0 +1,30 @@
+{
+  "id": "sihua-smoke",
+  "input": {
+    "apkRaw": "圻拆祗柝袛祇#2|2026|04|01|10|07|15|120.000000|-8|1|0"
+  },
+  "expected": {
+    "global": {
+      "siHuaInfo": [
+        "天同:化禄",
+        "天机:化权",
+        "文昌:化科",
+        "廉贞:化忌"
+      ]
+    },
+    "palaces": []
+  },
+  "source": {
+    "apkClockRaw": "圻拆祗柝袛祇#1|2026|4|1|10|11|13|120.0|-8|1|0",
+    "documents": [
+      "docs/apk-baselines/runtime-setup.md",
+      "docs/apk-baselines/capture-workflow.md",
+      "docs/apk-baselines/wave3-sample-notes.md"
+    ],
+    "notes": [
+      "2026-04-01 真实 APK 样本，盘面截图文件为 /tmp/tiandiziwei-wave3-sample2.png。",
+      "四化由 ziweipan 页面截图人工读取，并用本机 Vision OCR 仅做放大小字辅助，不使用 iOS 输出反填。",
+      "截图可见绿色禄、紫色权、蓝色科、红色忌标记，分别对应天同、天机、文昌、廉贞；数组顺序按回归比较协议固定为禄权科忌。"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "daxian-direction-smoke",
+  "input": {
+    "apkRaw": "圻拆祗柝袛祇#2|2026|03|27|22|34|24|120.000000|-8|1|0"
+  },
+  "expected": {
+    "global": {
+      "isShun": true
+    },
+    "palaces": [
+      { "position": "子", "daXian": "82~91" },
+      { "position": "丑", "daXian": "92~101" },
+      { "position": "寅", "daXian": "102~111" },
+      { "position": "卯", "daXian": "112~121" },
+      { "position": "辰", "daXian": "2~11" },
+      { "position": "巳", "daXian": "12~21" },
+      { "position": "午", "daXian": "22~31" },
+      { "position": "未", "daXian": "32~41" },
+      { "position": "申", "daXian": "42~51" },
+      { "position": "酉", "daXian": "52~61" },
+      { "position": "戌", "daXian": "62~71" },
+      { "position": "亥", "daXian": "72~81" }
+    ]
+  },
+  "source": {
+    "apkClockRaw": "圻拆祗柝袛祇#1|2026|3|27|22|39|43|120.0|-8|1|0",
+    "documents": [
+      "docs/apk-baselines/runtime-setup.md",
+      "docs/apk-baselines/capture-workflow.md"
+    ],
+    "notes": [
+      "2026-03-27 真实 APK 样本，与 core-fields-smoke 使用同一条输入。",
+      "大限顺逆由整圈年龄段递增方向人工确认：辰宫 2~11，随后巳午未申酉戌亥子丑寅卯依次递增。",
+      "各宫大限年龄段由同一张 ziweipan 盘面截图人工读取，不使用 iOS 输出反填。"
+    ]
+  }
+}

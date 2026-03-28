@@ -46,10 +46,16 @@ struct APKBaselineCase: Codable, Equatable {
         let shenGong: String?
         let mingZhu: String?
         let shenZhu: String?
+        let isShun: Bool?
+        let siHuaInfo: [String]?
     }
 
-    /// 宫位级契约占位；当前 smoke fixture 可为空数组。
-    struct PalaceExpectation: Codable, Equatable {}
+    /// 宫位级契约允许按需只校验少量已确认字段。
+    struct PalaceExpectation: Codable, Equatable {
+        let position: String
+        let daXian: String?
+        let majorStarNames: [String]?
+    }
 
     struct Source: Codable, Equatable {
         let apkClockRaw: String?

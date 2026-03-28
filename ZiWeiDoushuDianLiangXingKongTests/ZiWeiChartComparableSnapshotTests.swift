@@ -25,4 +25,47 @@ final class ZiWeiChartComparableSnapshotTests: XCTestCase {
         XCTAssertEqual(snapshot.palaces.count, 12)
         XCTAssertEqual(snapshot.palace(at: chart.mingGong)?.name, "命宫")
     }
+
+    func testSnapshotKeepsSiHuaInfoInRegressionOrder() throws {
+        let fixture = try APKBaselineLoader.load(id: "sihua-smoke")
+        let snapshot = ZiWeiChartComparableSnapshot(chart: try fixture.input.makeChart())
+
+        XCTAssertEqual(snapshot.global.siHuaInfo, fixture.expected.global.siHuaInfo)
+    }
+
+    func testSnapshotExposesMajorStarsAsStableNameArrays() throws {
+        let fixture = try APKBaselineLoader.load(id: "star-placement-smoke")
+        let snapshot = ZiWeiChartComparableSnapshot(chart: try fixture.input.makeChart())
+
+        for palaceExpectation in fixture.expected.palaces {
+            let palace = try XCTUnwrap(snapshot.palace(at: palaceExpectation.position))
+            let majorStarNames = palace.majorStars.map(\.name)
+
+            XCTAssertFalse(majorStarNames.isEmpty, "宫位 \(palaceExpectation.position) 应暴露正曜数组")
+            XCTAssertEqual(majorStarNames, majorStarNames.sorted())
+        }
+    }
+
+    func testStarPlacementSmokeMatchesAdditionalAPKObservedPalaces() throws {
+        let fixture = try APKBaselineLoader.load(id: "star-placement-smoke")
+        let snapshot = ZiWeiChartComparableSnapshot(chart: try fixture.input.makeChart())
+
+        let extraObservedPalaces: [String: [String]] = [
+            "子": ["巨门"],
+            "丑": ["天相"],
+            "巳": ["太阳"],
+            "未": ["破军", "紫微"],
+            "申": ["天府"],
+            "酉": ["太阴"]
+        ]
+
+        for (position, expectedNames) in extraObservedPalaces {
+            let palace = try XCTUnwrap(snapshot.palace(at: position), "缺少宫位 \(position)")
+            XCTAssertEqual(
+                palace.majorStars.map(\.name),
+                expectedNames,
+                "star-placement-smoke 的 \(position) 宫主星仍未与 APK 盘面截图对齐"
+            )
+        }
+    }
 }
