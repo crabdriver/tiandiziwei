@@ -71,7 +71,7 @@ struct InputView: View {
                 }
 
                 // 主标题 — Apple Display 风格：大、紧、白
-                Text("紫微排盘")
+                Text("点亮星空")
                     .font(.system(size: 42, weight: .semibold, design: .default))
                     .tracking(-0.5)
                     .foregroundColor(.primary)
@@ -345,11 +345,11 @@ struct InputView: View {
         Button(action: action) {
             Text(label)
                 .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
-                .foregroundColor(isSelected ? .black : Color(white: 0.5))
+                .foregroundColor(isSelected ? Color(UIColor.systemBackground) : .primary)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 6)
                 .background(
-                    isSelected ? ZiWeiColors.primary : Color(white: 0.18)
+                    isSelected ? ZiWeiColors.primary : Color(UIColor.tertiarySystemFill)
                 )
                 .clipShape(Capsule())
         }
