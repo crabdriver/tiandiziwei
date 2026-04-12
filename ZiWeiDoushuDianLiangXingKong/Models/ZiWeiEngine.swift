@@ -589,7 +589,8 @@ class ZiWeiEngine {
         isLeapMonth: Bool = false,
         useMonthAdjustment: Bool = false,
         longitude: Double = 120.0,
-        timeZone: Int = 8
+        timeZone: Int = 8,
+        targetYear: Int? = nil
     ) -> ZiWeiChart {
         _ = timeZone
 
@@ -775,8 +776,8 @@ class ZiWeiEngine {
         let jiangQianMap = FlowYearStars.placeJiangQian(yearZhiIdx: yearZhiIdx)
         let luCunPos = auxStars["禄存"] ?? 0
         let boshiMap = FlowYearStars.placeBoshi(luCunPos: luCunPos, isShun: isShun)
-        let currentYear = Calendar.current.component(.year, from: Date())
-        let nominalAge = max(1, currentYear - lunar.year + 1)
+        let simulatedCurrentYear = targetYear ?? Calendar.current.component(.year, from: Date())
+        let nominalAge = max(1, simulatedCurrentYear - lunar.year + 1)
         let xiaoXianPos = FlowYearStars.xiaoXianPosition(
             currentAge: nominalAge,
             isMale: isMale,

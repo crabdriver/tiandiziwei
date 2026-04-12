@@ -11,60 +11,40 @@ struct ChartDisplayView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // 标签切换（胶囊分段，比系统默认条更贴近现代排盘站点的切换）
+            // ── 标签切换栏 ──
             HStack(spacing: 0) {
-                tabChip(title: "紫微盘", systemImage: "circle.grid.3x3", index: 0)
-                tabChip(title: "排盘详情", systemImage: "list.bullet.rectangle", index: 1)
+                tabChip(title: "命盘", systemImage: "circle.grid.3x3", index: 0)
+                tabChip(title: "详情", systemImage: "list.bullet.rectangle", index: 1)
             }
-            .padding(5)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(.ultraThinMaterial)
-            )
+            .padding(4)
+            .background(Color(UIColor.secondarySystemBackground))
             .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                ZiWeiColors.border.opacity(0.5),
-                                ZiWeiColors.gold.opacity(0.35)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
+                Rectangle()
+                    .frame(height: 0.5)
+                    .foregroundColor(ZiWeiColors.border.opacity(0.4)),
+                alignment: .bottom
             )
-            .shadow(color: Color.black.opacity(0.06), radius: 10, y: 4)
-            .padding(.horizontal, 16)
-            .padding(.top, 10)
-            .padding(.bottom, 8)
-            .accessibilityLabel("排盘视图切换")
-            .accessibilityHint("在紫微命盘与文字详情之间切换")
-            
-            // 内容
-            TabView(selection: $selectedTab) {
-                // 紫微盘面
+            .padding(.horizontal, 12)
+            .padding(.top, 6)
+            .padding(.bottom, 4)
+
+            // ── 内容区域 ──
+            if selectedTab == 0 {
+                // 命盘：全屏满铺，无 ScrollView
                 if let chart = viewModel.ziWeiChart {
-                    ScrollView {
-                        ZiWeiChartView(chart: chart)
-                            .padding(10)
-                            .shadow(color: Color.black.opacity(0.07), radius: 16, y: 8)
-                            .padding(8)
-                    }
-                    .tag(0)
+                    ZiWeiChartView(chart: chart)
+                        .padding(6)
                 }
-                
-                // 详情
+                Divider().background(ZiWeiColors.border.opacity(0.25))
+                timeTravelBar
+            } else {
                 if let chart = viewModel.ziWeiChart {
                     detailView(chart: chart)
-                        .tag(1)
                 }
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
         }
-        .background(ZiWeiColors.screenBackdropGradient.ignoresSafeArea())
-        .navigationTitle(viewModel.input.name.isEmpty ? "排盘结果" : viewModel.input.name)
+        .background(Color(UIColor.systemBackground).ignoresSafeArea())
+        .navigationTitle(viewModel.input.name.isEmpty ? "命盘" : viewModel.input.name)
         .navigationBarTitleDisplayMode(.inline)
         .ziWeiNavigationChrome()
     }
@@ -116,6 +96,73 @@ struct ChartDisplayView: View {
             .foregroundStyle(selectedTab == index ? ZiWeiColors.textDark : ZiWeiColors.textMuted)
         }
         .buttonStyle(.plain)
+    }
+    
+    // MARK: - 时间穿越工具栏（流年大限切换）
+    
+    private var timeTravelBar: some View {
+        HStack {
+            Button(action: { viewModel.adjustTargetYear(by: -1) }) {
+                Image(systemName: "chevron.left.circle.fill")
+                    .font(.title)
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(ZiWeiColors.primary, ZiWeiColors.border.opacity(0.5))
+            }
+            
+            Spacer()
+            
+            VStack(spacing: 2) {
+                Text(viewModel.targetYear == nil ? "静态本命盘" : "动态流年盘")
+                    .font(.caption2)
+                    .foregroundStyle(ZiWeiColors.textMuted)
+                
+                if let year = viewModel.targetYear {
+                    Text("\(year) 年")
+                        .font(.headline.weight(.heavy))
+                        .foregroundColor(ZiWeiColors.huaQuanColor)
+                } else {
+                    Text("当前时空")
+                        .font(.headline.weight(.heavy))
+                        .foregroundColor(ZiWeiColors.primary)
+                }
+            }
+            
+            Spacer()
+            
+            Button(action: {
+                withAnimation {
+                    if viewModel.targetYear == nil {
+                        viewModel.adjustTargetYear(by: 0) // 初始化流年
+                    } else {
+                        viewModel.resetToCurrentYear() // 返回本命
+                    }
+                }
+            }) {
+                Text(viewModel.targetYear == nil ? "看流年" : "复原")
+                    .font(.footnote.weight(.semibold))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(ZiWeiColors.primary.opacity(0.15))
+                    .foregroundColor(ZiWeiColors.primary)
+                    .cornerRadius(12)
+            }
+            
+            Spacer()
+            
+            Button(action: { viewModel.adjustTargetYear(by: 1) }) {
+                Image(systemName: "chevron.right.circle.fill")
+                    .font(.title)
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(ZiWeiColors.primary, ZiWeiColors.border.opacity(0.5))
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.vertical, 12)
+        .background(
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .ignoresSafeArea(edges: .bottom)
+        )
     }
     
     // MARK: - 详情视图
@@ -194,7 +241,7 @@ struct ChartDisplayView: View {
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
-        .background(ZiWeiColors.screenBackdropGradient)
+        .ziWeiInputBackdrop()
     }
     
     // MARK: - 辅助方法

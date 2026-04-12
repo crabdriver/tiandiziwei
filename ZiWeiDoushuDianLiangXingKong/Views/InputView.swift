@@ -1,268 +1,369 @@
 // InputView.swift - 输入页面
-// 看盘啦 · iOS 紫微斗数排盘
+// 紫微斗数排盘 · 重构版（Apple Design Language + 文墨天机极简美学）
 
 import SwiftUI
 
-/// 出生信息输入页面
 struct InputView: View {
     @ObservedObject var viewModel: ChartViewModel
     @State private var showChartView = false
-    
+
     var body: some View {
         NavigationStack {
-            Form {
-                // 顶部标题区域（参考 iztro 文档站：主标题 + 一句说明）
-                Section {
-                    VStack(spacing: 14) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(ZiWeiColors.inputHeroGradient)
-                                .shadow(color: Color(red: 0.15, green: 0.12, blue: 0.28).opacity(0.35), radius: 18, y: 10)
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .stroke(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.white.opacity(0.22),
-                                            Color(red: 1, green: 0.82, blue: 0.45).opacity(0.35),
-                                            Color.white.opacity(0.08)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 1
-                                )
-                            VStack(spacing: 12) {
-                                Image(systemName: "sparkles")
-                                    .font(.system(size: 38, weight: .medium))
-                                    .symbolRenderingMode(.palette)
-                                    .foregroundStyle(.white.opacity(0.95), Color(red: 1, green: 0.88, blue: 0.55))
-                                    .shadow(color: Color.black.opacity(0.25), radius: 2, y: 1)
-                                Text("看盘啦")
-                                    .font(.system(.title2, design: .serif))
-                                    .fontWeight(.semibold)
-                                    .foregroundStyle(.white)
-                                    .shadow(color: Color.black.opacity(0.2), radius: 1, y: 1)
-                                Text("输入生辰，获取专属命盘")
-                                    .font(.subheadline)
-                                    .tracking(0.3)
-                                    .foregroundStyle(.white.opacity(0.82))
+            ZStack {
+                // 全局自适应背景
+                Color(UIColor.systemBackground).ignoresSafeArea()
+
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        // ── HERO SECTION ──────────────────────────────────────
+                        heroSection
+
+                        // ── INPUT CARDS ───────────────────────────────────────
+                        VStack(spacing: 12) {
+                            basicInfoCard
+                            birthTimeCard
+                            if viewModel.usesLongitudeCorrection() {
+                                longitudeCard
                             }
-                            .multilineTextAlignment(.center)
-                            .padding(.vertical, 24)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 24)
+                        .padding(.bottom, 8)
+
+                        // ── CTA BUTTON ────────────────────────────────────────
+                        startButton
                             .padding(.horizontal, 16)
-                        }
-                        .padding(.horizontal, 4)
+                            .padding(.vertical, 20)
                     }
-                    .listRowInsets(EdgeInsets(top: 12, leading: 12, bottom: 4, trailing: 12))
-                    .listRowBackground(Color.clear)
-                }
-                
-                // 基本信息
-                Section {
-                    HStack {
-                        Label("姓名", systemImage: "person.fill")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        TextField("输入姓名（可选）", text: $viewModel.input.name)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    
-                    HStack {
-                        Label("性别", systemImage: "figure.stand")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Picker("性别", selection: $viewModel.input.isMale) {
-                            Text("男").tag(true)
-                            Text("女").tag(false)
-                        }
-                        .pickerStyle(.segmented)
-                        .frame(width: 120)
-                    }
-                } header: {
-                    sectionHeaderTitle("基本信息")
-                }
-                
-                // 出生时间
-                Section {
-                    Picker("时间模式", selection: $viewModel.input.timeInputMode) {
-                        ForEach(TimeInputMode.allCases, id: \.self) { mode in
-                            Text(mode.title).tag(mode)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                    
-                    if viewModel.input.timeInputMode == .lunarTime,
-                       viewModel.hasLeapMonthForCurrentSelection() {
-                        Toggle(isOn: $viewModel.input.isLeapMonth) {
-                            Label("闰月", systemImage: "moonphase.waxing.crescent")
-                        }
-                    }
-                    
-                    Toggle(isOn: $viewModel.input.useMonthAdjustment) {
-                        Label("换月", systemImage: "arrow.left.arrow.right")
-                    }
-                    
-                    // 日期选择 (紧凑菜单模式)
-                    HStack {
-                        Label("日期", systemImage: "calendar")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Picker("", selection: $viewModel.input.year) {
-                            ForEach(1900..<2100, id: \.self) { year in
-                                Text("\(year)年").tag(year)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        
-                        Picker("", selection: $viewModel.input.month) {
-                            ForEach(1...12, id: \.self) { month in
-                                Text("\(month)月").tag(month)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        
-                        Picker("", selection: $viewModel.input.day) {
-                            ForEach(viewModel.availableDays(), id: \.self) { day in
-                                Text("\(day)日").tag(day)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                    }
-                    
-                    // 时间选择
-                    HStack {
-                        Label("时间", systemImage: "clock")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Picker("", selection: $viewModel.input.hour) {
-                            ForEach(0..<24, id: \.self) { hour in
-                                Text(String(format: "%02d时", hour)).tag(hour)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        
-                        Picker("", selection: $viewModel.input.minute) {
-                            ForEach(0..<60, id: \.self) { min in
-                                Text(String(format: "%02d分", min)).tag(min)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                    }
-                    
-                    // 时辰显示
-                    HStack {
-                        Label("时辰", systemImage: "sun.max")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text(viewModel.shiChenText(for: viewModel.input.hour))
-                            .foregroundColor(ZiWeiColors.primary)
-                            .fontWeight(.medium)
-                    }
-                    
-                    Button(action: { viewModel.setCurrentTime() }) {
-                        HStack {
-                            Spacer()
-                            Text("使用当前时间")
-                            Spacer()
-                        }
-                    }
-                    .foregroundColor(ZiWeiColors.primary)
-                } header: {
-                    sectionHeaderTitle("出生时间")
-                }
-                
-                // 高级设置
-                Section {
-                    if viewModel.usesLongitudeCorrection() {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Label("经度", systemImage: "location.fill")
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text(String(format: "%.1f°E", viewModel.input.longitude))
-                                    .monospacedDigit()
-                                    .foregroundColor(ZiWeiColors.primary)
-                            }
-                            Slider(
-                                value: $viewModel.input.longitude,
-                                in: 73...135,
-                                step: 0.1
-                            )
-                            .tint(ZiWeiColors.primary)
-                        }
-                        .padding(.vertical, 4)
-                    }
-                    
-                    HStack {
-                        Label("事项", systemImage: "note.text")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        TextField("事项备注（可选）", text: $viewModel.input.eventNote)
-                            .multilineTextAlignment(.trailing)
-                    }
-                } header: {
-                    sectionHeaderTitle("高级设置")
-                }
-                
-                // 排盘按钮
-                Section {
-                    Button(action: {
-                        viewModel.generateChart()
-                        showChartView = true
-                    }) {
-                        HStack(spacing: 8) {
-                            Spacer(minLength: 0)
-                            Image(systemName: "wand.and.stars")
-                                .font(.body.weight(.semibold))
-                            Text("开始排盘")
-                                .font(.headline)
-                            Spacer(minLength: 0)
-                        }
-                        .foregroundStyle(.white)
-                        .padding(.vertical, 12)
-                    }
-                    .accessibilityLabel("开始排盘")
-                    .accessibilityHint("根据当前生辰生成紫微命盘")
-                    .listRowBackground(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .fill(AppColors.primaryGradient)
-                            .shadow(color: ZiWeiColors.primary.opacity(0.35), radius: 8, y: 4)
-                    )
                 }
             }
-            .scrollContentBackground(.hidden)
-            .ziWeiInputBackdrop()
-            .tint(ZiWeiColors.primary)
-            .navigationTitle("输入信息")
-            .navigationBarTitleDisplayMode(.inline)
-            .ziWeiNavigationChrome()
-            .onAppear {
-                viewModel.normalizeInput()
-            }
-            .onChange(of: viewModel.input.timeInputMode) { _, _ in
-                viewModel.normalizeInput()
-            }
-            .onChange(of: viewModel.input.year) { _, _ in
-                viewModel.normalizeInput()
-            }
-            .onChange(of: viewModel.input.month) { _, _ in
-                viewModel.normalizeInput()
-            }
-            .onChange(of: viewModel.input.isLeapMonth) { _, _ in
-                viewModel.normalizeInput()
-            }
+            .navigationBarHidden(true)
             .navigationDestination(isPresented: $showChartView) {
                 ChartDisplayView(viewModel: viewModel)
             }
+            .onAppear { viewModel.normalizeInput() }
+            .onChange(of: viewModel.input.timeInputMode) { _, _ in viewModel.normalizeInput() }
+            .onChange(of: viewModel.input.year) { _, _ in viewModel.normalizeInput() }
+            .onChange(of: viewModel.input.month) { _, _ in viewModel.normalizeInput() }
+            .onChange(of: viewModel.input.isLeapMonth) { _, _ in viewModel.normalizeInput() }
         }
     }
-    
-    /// 分组标题（类似文档站的小节样式）
-    private func sectionHeaderTitle(_ title: String) -> some View {
-        Text(title)
-            .font(.footnote.weight(.semibold))
-            .foregroundStyle(ZiWeiColors.textMuted)
-            .textCase(nil)
+
+    // MARK: - Hero Section
+
+    private var heroSection: some View {
+        VStack(spacing: 0) {
+            // 顶部状态栏安全区 + 标题
+            VStack(spacing: 16) {
+                // 标志图标
+                ZStack {
+                    Circle()
+                        .fill(Color(white: 0.12))
+                        .frame(width: 72, height: 72)
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 32, weight: .light))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [Color(white: 0.95), Color(hue: 0.12, saturation: 0.6, brightness: 0.95)],
+                                startPoint: .topLeading, endPoint: .bottomTrailing
+                            )
+                        )
+                }
+
+                // 主标题 — Apple Display 风格：大、紧、白
+                Text("紫微排盘")
+                    .font(.system(size: 42, weight: .semibold, design: .default))
+                    .tracking(-0.5)
+                    .foregroundColor(.primary)
+
+                // 副标题 — 功能说明，浅灰降调
+                Text("输入生辰，推演命盘")
+                    .font(.system(size: 16, weight: .regular))
+                    .tracking(-0.2)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 60)
+            .padding(.bottom, 40)
+        }
+        .background(Color.clear)
+    }
+
+    // MARK: - Basic Info Card
+
+    private var basicInfoCard: some View {
+        VStack(spacing: 0) {
+            cardLabel("个人信息")
+
+            VStack(spacing: 0) {
+                // 姓名行
+                rowField(icon: "person", label: "姓名") {
+                    TextField("可选", text: $viewModel.input.name)
+                        .multilineTextAlignment(.trailing)
+                        .foregroundColor(.primary)
+                        .font(.system(size: 16))
+                }
+
+                rowDivider()
+
+                // 性别行
+                rowField(icon: "person.2", label: "性别") {
+                    HStack(spacing: 8) {
+                        genderPill(label: "男", isSelected: viewModel.input.isMale) {
+                            viewModel.input.isMale = true
+                        }
+                        genderPill(label: "女", isSelected: !viewModel.input.isMale) {
+                            viewModel.input.isMale = false
+                        }
+                    }
+                }
+
+                rowDivider()
+
+                // 时间模式行
+                rowField(icon: "clock.badge", label: "时间模式") {
+                    Menu {
+                        ForEach(TimeInputMode.allCases, id: \.self) { mode in
+                            Button(mode.title) {
+                                viewModel.input.timeInputMode = mode
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(viewModel.input.timeInputMode.title)
+                                .foregroundColor(Color(white: 0.65))
+                                .font(.system(size: 15))
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundColor(Color(white: 0.45))
+                        }
+                    }
+                }
+            }
+            .card()
+        }
+    }
+
+    // MARK: - Birth Time Card
+
+    private var birthTimeCard: some View {
+        VStack(spacing: 0) {
+            cardLabel("出生时间")
+
+            VStack(spacing: 0) {
+                // 日期行
+                rowField(icon: "calendar", label: "日期") {
+                    HStack(spacing: 0) {
+                        compactPicker(selection: $viewModel.input.year, items: Array(1995..<2100)) { "\($0)年" }
+                        compactPicker(selection: $viewModel.input.month, items: Array(1...12)) { "\($0)月" }
+                        compactPicker(selection: $viewModel.input.day, items: viewModel.availableDays()) { "\($0)日" }
+                    }
+                }
+
+                rowDivider()
+
+                // 时间行
+                rowField(icon: "clock", label: "时间") {
+                    HStack(spacing: 0) {
+                        compactPicker(selection: $viewModel.input.hour, items: Array(0..<24)) { String(format: "%02d时", $0) }
+                        compactPicker(selection: $viewModel.input.minute, items: Array(0..<60)) { String(format: "%02d分", $0) }
+                    }
+                }
+
+                rowDivider()
+
+                // 时辰提示
+                HStack {
+                    Image(systemName: "sun.horizon")
+                        .font(.system(size: 13))
+                        .foregroundColor(Color(white: 0.4))
+                    Text("时辰")
+                        .font(.system(size: 15))
+                        .foregroundColor(Color(white: 0.45))
+                    Spacer()
+                    Text(viewModel.shiChenText(for: viewModel.input.hour))
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundColor(ZiWeiColors.primary)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 13)
+
+                // 闰月 Toggle（仅阴历且有闰月时显示）
+                if viewModel.input.timeInputMode == .lunarTime,
+                   viewModel.hasLeapMonthForCurrentSelection() {
+                    rowDivider()
+                    rowField(icon: "moonphase.waxing.crescent", label: "闰月") {
+                        Toggle("", isOn: $viewModel.input.isLeapMonth)
+                            .tint(ZiWeiColors.primary)
+                            .labelsHidden()
+                    }
+                }
+
+                rowDivider()
+
+                // 换月 Toggle
+                rowField(icon: "arrow.left.arrow.right", label: "节气换月") {
+                    Toggle("", isOn: $viewModel.input.useMonthAdjustment)
+                        .tint(ZiWeiColors.primary)
+                        .labelsHidden()
+                }
+
+                rowDivider()
+
+                // 使用当前时间
+                Button(action: { viewModel.setCurrentTime() }) {
+                    HStack {
+                        Image(systemName: "location.circle")
+                            .font(.system(size: 13))
+                            .foregroundColor(Color(white: 0.4))
+                        Text("使用当前时间")
+                            .font(.system(size: 15))
+                            .foregroundColor(ZiWeiColors.primary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(Color(white: 0.35))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 13)
+                }
+                .buttonStyle(.plain)
+            }
+            .card()
+        }
+    }
+
+    // MARK: - Longitude Card
+
+    private var longitudeCard: some View {
+        VStack(spacing: 0) {
+            cardLabel("真太阳时修正")
+
+            VStack(spacing: 0) {
+                HStack {
+                    Image(systemName: "location.fill")
+                        .font(.system(size: 13))
+                        .foregroundColor(Color(white: 0.4))
+                    Text("经度")
+                        .font(.system(size: 15))
+                        .foregroundColor(Color(white: 0.45))
+                    Spacer()
+                    Text(String(format: "%.1f° %@", abs(viewModel.input.longitude), viewModel.input.longitude >= 0 ? "E" : "W"))
+                        .font(.system(size: 15, weight: .semibold).monospacedDigit())
+                        .foregroundColor(ZiWeiColors.primary)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 13)
+
+                Slider(value: $viewModel.input.longitude, in: -180...180, step: 0.5)
+                    .tint(ZiWeiColors.primary)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 14)
+            }
+            .card()
+        }
+    }
+
+    // MARK: - CTA Button
+
+    private var startButton: some View {
+        Button(action: {
+            viewModel.generateChart()
+            showChartView = true
+        }) {
+            HStack(spacing: 10) {
+                Image(systemName: "wand.and.stars")
+                    .font(.system(size: 17, weight: .semibold))
+                Text("开始排盘")
+                    .font(.system(size: 17, weight: .semibold))
+                    .tracking(-0.2)
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 17)
+            .background(
+                ZiWeiColors.primary
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .shadow(color: ZiWeiColors.primary.opacity(0.35), radius: 18, y: 6)
+        .accessibilityLabel("开始排盘")
+    }
+
+    // MARK: - Helpers
+
+    private func cardLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 12, weight: .semibold))
+            .tracking(0.5)
+            .foregroundColor(Color(white: 0.4))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 4)
+            .padding(.bottom, 6)
+    }
+
+    private func rowDivider() -> some View {
+        Divider()
+            .background(Color(white: 0.18))
+            .padding(.leading, 44)
+    }
+
+    @ViewBuilder
+    private func rowField<Trailing: View>(icon: String, label: String, @ViewBuilder trailing: () -> Trailing) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundColor(.secondary)
+                .frame(width: 20)
+            Text(label)
+                .font(.system(size: 15))
+                .foregroundColor(.primary)
+            Spacer()
+            trailing()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 13)
+    }
+
+    @ViewBuilder
+    private func compactPicker<T: Hashable>(selection: Binding<T>, items: [T], label: @escaping (T) -> String) -> some View {
+        Menu {
+            ForEach(items, id: \.self) { item in
+                Button(label(item)) { selection.wrappedValue = item }
+            }
+        } label: {
+            Text(label(selection.wrappedValue))
+                .font(.system(size: 15))
+                .foregroundColor(Color(white: 0.75))
+                .padding(.horizontal, 4)
+        }
+    }
+
+    @ViewBuilder
+    private func genderPill(label: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(label)
+                .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
+                .foregroundColor(isSelected ? .black : Color(white: 0.5))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 6)
+                .background(
+                    isSelected ? ZiWeiColors.primary : Color(white: 0.18)
+                )
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .animation(.easeInOut(duration: 0.15), value: isSelected)
+    }
+}
+
+// MARK: - Card Modifier
+
+private extension View {
+    func card() -> some View {
+        self
+            .background(Color(UIColor.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }

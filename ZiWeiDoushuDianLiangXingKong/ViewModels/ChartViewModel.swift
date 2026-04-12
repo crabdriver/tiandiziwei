@@ -28,7 +28,7 @@ enum TimeInputMode: String, CaseIterable {
 
 /// 排盘输入参数
 struct ChartInput: Equatable {
-    var year: Int = 1990
+    var year: Int = 1995
     var month: Int = 1
     var day: Int = 1
     var hour: Int = 12
@@ -112,10 +112,26 @@ struct ChartInput: Equatable {
     }
 }
 
-/// 主视图模型
 class ChartViewModel: ObservableObject {
     @Published var input = ChartInput()
     @Published var ziWeiChart: ZiWeiChart?
+    
+    // 用于流年动态排盘的目标年份（默认 nil 代表生辰当下的流年/今年计算逻辑）
+    @Published var targetYear: Int?
+    
+    /// 调整大限/流年的目标年份并重绘排盘
+    func adjustTargetYear(by difference: Int) {
+        if targetYear == nil {
+            targetYear = Calendar.current.component(.year, from: Date())
+        }
+        targetYear! += difference
+        generateChart()
+    }
+    
+    func resetToCurrentYear() {
+        targetYear = nil
+        generateChart()
+    }
     
     /// 生成排盘
     func generateChart() {
@@ -131,7 +147,8 @@ class ChartViewModel: ObservableObject {
             timeInputMode: input.timeInputMode,
             isLeapMonth: input.isLeapMonth,
             useMonthAdjustment: input.useMonthAdjustment,
-            longitude: input.longitude
+            longitude: input.longitude,
+            targetYear: targetYear
         )
     }
     
